@@ -71,7 +71,7 @@ function av_insert_attachment_from_filepath( $file_path, $args = [] ) {
 }
 function av_insert_image_from_array( $array, $parent_post_id = null ) {
 	// Validate existance of necessary data
-	if ( ! av_array_keys_exists( [ 'url' ], $array ) ) {
+	if ( ! isset( $array[ 'url' ] ) ) {
 		throw new \Exception( 'Missing url in media array ' . var_export( $array, true ) );
 	}
 
