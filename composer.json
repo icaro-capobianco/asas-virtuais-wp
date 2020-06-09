@@ -1,0 +1,16 @@
+{
+    "name": "asas-virtuais/asas-virtuais-wp",
+    "type": "library",
+    "description": "Library for coding WordPress plugins",
+    "keywords": ["wordpress","wordpress-plugin","library"],
+    "homepage": "https://asasvirtuais.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ícaro Carniello Capobianco",
+            "email": "icaro.capobianco@gmail.com",
+            "homepage": "https://asasvirtuais.com",
+            "role": "Developer"
+        }
+    ]
+}
