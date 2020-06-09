@@ -129,3 +129,4 @@ class AsasVirtuaisWP {
 }
 
 AsasVirtuaisWP::instance();
+
