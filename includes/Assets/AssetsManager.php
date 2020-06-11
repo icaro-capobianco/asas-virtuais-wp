@@ -10,8 +10,10 @@ class AssetsManager {
 	public $scripts = [];
 	public $localize = [];
 	public $admin_scripts = [];
+	public $plugin_assets_dir;
 
-	public function __construct( $version, string $prefix = '' ) {
+	public function __construct( $assets_dir, $version, string $prefix = '' ) {
+		$this->plugin_assets_dir = $assets_dir;
 		$this->prefix  = $prefix;
 		$this->version = $version;
 
@@ -19,6 +21,11 @@ class AssetsManager {
 		add_action( 'admin_enqueue_scripts', [$this, 'enqueue_admin_scripts'] );
 	}
 
+	public function assets_dir() {
+		return $this->plugin_assets_dir;
+	}
+
+	// Hooks and Internal methods
 	public function enqueue_styles() {
 		foreach( $this->styles as $style ) {
 			wp_enqueue_style( $style->name, $style->src, $style->deps, $this->version, $style->media );
@@ -26,15 +33,22 @@ class AssetsManager {
 	}
 	public function enqueue_scripts() {
 		foreach( $this->scripts as $script ) {
-			wp_enqueue_script( $script->name, $script->src, $script->deps, $this->version, $script->footer );
+			$this->enqueue_script( $script );
 		}
 	}
 	public function enqueue_admin_scripts() {
 		foreach( $this->admin_scripts as $script ) {
-			wp_enqueue_script( $script->name, $script->src, $script->deps, $this->version, $script->footer );
+			$this->enqueue_script( $script );
 		}
 	}
-
+	private function enqueue_script( $script ) {
+		wp_enqueue_script( $script->name, $script->src, $script->deps, $this->version, $script->footer );
+		$localize = $this->localize[ $script->name ] ?? false;
+		if ( $localize ) {
+			wp_localize_script( $script->name, $localize->name, $localize->data );
+		}
+	}
+	// Public methods for local scripts and styles
 	public function enqueue_local_style( $name, $dir, $deps = [], $media = 'all' ) {
 		$src = self::asset_file_url( $name, $dir, '.css' );
 		$name = $this->prefix . $name;
