@@ -29,7 +29,7 @@ class AsasVirtuaisWP {
 		add_action( 'admin_notices', [ $this, 'admin_notices' ], 15 );
 
 		if ( $this->is_environment_compatible() ) {
-			add_action( 'plugins_loaded', array( $this, 'init_plugin' ) );
+			$this->init_plugin();
 		}
 	}
 	public function init_plugin() {
@@ -39,13 +39,13 @@ class AsasVirtuaisWP {
 		$loader = require_once( plugin_dir_path( $this->plugin_file ) . 'vendor/autoload.php' );
 		$loader->addPsr4( 'AsasVirtuaisWP\\', plugin_dir_path( __FILE__ ) . 'includes' );
 
-		require_once( plugin_dir_path( __FILE__ ) . 'includes/AsasVirtuais.php' );
+		require_once( plugin_dir_path( __FILE__ ) . 'includes/functions.php' );
 		asas_virtuais()->initialize( $this->plugin_file, __FILE__, $this->init_args );
 	}
-	public static function instance( $plugin_file ) {
+	public static function instance( $plugin_file, $args = [] ) {
 
 		if ( null === self::$instance ) {
-			self::$instance = new self( $plugin_file );
+			self::$instance = new self( $plugin_file, $args );
 		}
 
 		return self::$instance;
