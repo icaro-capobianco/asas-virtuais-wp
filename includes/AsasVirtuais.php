@@ -26,7 +26,7 @@ class AsasVirtuais {
         $this->plugin_dir = plugin_dir_path( $plugin_file );
 		$this->plugin_url = plugin_dir_url( $plugin_file );
 		$this->framework_dir = plugin_dir_path( $framework_file );
-		$this->framework_url = plugin_dir_url( $framework_dir );
+		$this->framework_url = plugin_dir_url( $framework_file );
 
 		foreach( glob( $this->framework_dir . "libs/*.php") as $lib_file ){
             require_once $lib_file;
@@ -38,3 +38,5 @@ class AsasVirtuais {
 function asas_virtuais() {
 	return AsasVirtuais::instance();
 }
+
+asas_virtuais()->initialize( $this->plugin_file, __FILE__ );
