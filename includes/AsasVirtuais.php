@@ -12,6 +12,10 @@ class AsasVirtuais {
 	public $framework_dir;
 	public $framework_url;
 
+	public $admin_manager;
+
+	public $acf_manager;
+
 	public static function instance() {
 
 		if ( null === self::$instance ) {
@@ -21,14 +25,20 @@ class AsasVirtuais {
 		return self::$instance;
     }
 
-    public function initialize( $plugin_file, $framework_file ) {
+    public function initialize( $plugin_file, $framework_file, $args = [] ) {
 
         $this->plugin_dir = plugin_dir_path( $plugin_file );
 		$this->plugin_url = plugin_dir_url( $plugin_file );
 		$this->framework_dir = plugin_dir_path( $framework_file );
 		$this->framework_url = plugin_dir_url( $framework_file );
 
-		foreach( glob( $this->framework_dir . "libs/*.php") as $lib_file ){
+		$this->admin_manager = new \AsasVirtuaisWP\Admin\AdminManager();
+
+		if ( isset( $args['custom_fields_dir'] ) ) {
+			$this->acf_manager = new \AsasVirtuaisWP\ACF\ACFManager( $args['custom_fields_dir'] );
+		}
+
+		foreach( glob( $this->framework_dir . "lib/*.php") as $lib_file ){
             require_once $lib_file;
 		}
     }
@@ -38,5 +48,3 @@ class AsasVirtuais {
 function asas_virtuais() {
 	return AsasVirtuais::instance();
 }
-
-asas_virtuais()->initialize( $this->plugin_file, __FILE__ );

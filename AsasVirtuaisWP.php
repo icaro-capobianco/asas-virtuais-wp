@@ -15,9 +15,12 @@ class AsasVirtuaisWP {
 
 	private $plugin_file;
 
-	protected function __construct( $plugin_file ) {
+	private $init_args;
+
+	protected function __construct( $plugin_file, $args = [] ) {
 
 		$this->plugin_file = $plugin_file;
+		$this->init_args = $args;
 
 		register_activation_hook( $plugin_file, [ $this, 'activation_check' ] );
 
@@ -37,6 +40,7 @@ class AsasVirtuaisWP {
 		$loader->addPsr4( 'AsasVirtuaisWP\\', plugin_dir_path( __FILE__ ) . 'includes' );
 
 		require_once( plugin_dir_path( __FILE__ ) . 'includes/AsasVirtuais.php' );
+		asas_virtuais()->initialize( $this->plugin_file, __FILE__, $this->init_args );
 	}
 	public static function instance( $plugin_file ) {
 
