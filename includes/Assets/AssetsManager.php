@@ -66,7 +66,7 @@ class AssetsManager {
 	}
 
 	public function localize_script( $handle, $name, $data ) {
-		$this->localize[$handle] = compact( 'name', 'data' );
+		$this->localize[$handle] = (object) compact( 'name', 'data' );
 	}
 
 	public static function asset_file_url( $name, $dir_path, $extension ) {
