@@ -33,16 +33,15 @@ class AsasVirtuaisWP {
 		if ( ! $this->is_wp_compatible() ) {
 			return;
 		}
-		$loader = require_once( plugin_dir_path( $plugin_file ) . 'vendor/autoload.php' );
+		$loader = require_once( plugin_dir_path( $this->plugin_file ) . 'vendor/autoload.php' );
 		$loader->addPsr4( 'AsasVirtuaisWP\\', plugin_dir_path( __FILE__ ) . 'includes' );
 
 		require_once( plugin_dir_path( __FILE__ ) . 'includes/AsasVirtuais.php' );
-		asas_virtuais()->initialize( $plugin_file, __FILE__ );
 	}
-	public static function instance() {
+	public static function instance( $plugin_file ) {
 
 		if ( null === self::$instance ) {
-			self::$instance = new self();
+			self::$instance = new self( $plugin_file );
 		}
 
 		return self::$instance;
@@ -127,5 +126,3 @@ class AsasVirtuaisWP {
 		}
 
 }
-
-AsasVirtuaisWP::instance();
