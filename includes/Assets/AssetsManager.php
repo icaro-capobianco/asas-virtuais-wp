@@ -9,6 +9,7 @@ class AssetsManager {
 	public $styles = [];
 	public $scripts = [];
 	public $localize = [];
+	public $admin_styles = [];
 	public $admin_scripts = [];
 	public $plugin_assets_dir;
 
@@ -18,7 +19,9 @@ class AssetsManager {
 		$this->version = $version;
 
 		add_action( 'wp_enqueue_scripts', [$this, 'enqueue_scripts'] );
+		add_action( 'wp_enqueue_scripts', [$this, 'enqueue_styles'] );
 		add_action( 'admin_enqueue_scripts', [$this, 'enqueue_admin_scripts'] );
+		add_action( 'admin_enqueue_scripts', [$this, 'enqueue_admin_styles'] );
 	}
 
 	public function assets_dir() {
@@ -28,7 +31,7 @@ class AssetsManager {
 	// Hooks and Internal methods
 	public function enqueue_styles() {
 		foreach( $this->styles as $style ) {
-			wp_enqueue_style( $style->name, $style->src, $style->deps, $this->version, $style->media );
+			$this->enque_style( $style );
 		}
 	}
 	public function enqueue_scripts() {
@@ -40,6 +43,14 @@ class AssetsManager {
 		foreach( $this->admin_scripts as $script ) {
 			$this->enqueue_script( $script );
 		}
+	}
+	public function enqueue_admin_styles() {
+		foreach( $this->admin_styles as $style ) {
+			$this->enqueue_style( $style );
+		}
+	}
+	private function enqueue_style( $style ) {
+		wp_enqueue_style( $style->name, $style->src, $style->deps, $this->version, $style->media );
 	}
 	private function enqueue_script( $script ) {
 		wp_enqueue_script( $script->name, $script->src, $script->deps, $this->version, $script->footer );
@@ -63,6 +74,11 @@ class AssetsManager {
 		$src = self::asset_file_url( $name, $dir, '.js' );
 		$name = $this->prefix . $name;
 		$this->admin_scripts[] = (object) compact( 'name', 'src', 'footer', 'deps' );
+	}
+	public function enqueue_local_admin_style( $name, $dir, $deps = [], $media = 'all' ) {
+		$src = self::asset_file_url( $name, $dir, '.css' );
+		$name = $this->prefix . $name;
+		$this->admin_styles[] = (object) compact( 'name', 'src', 'deps', 'media' );
 	}
 
 	public function localize_script( $handle, $name, $data ) {
