@@ -32,7 +32,7 @@ class AdminManager {
 
 	public function display_admin_notices() {
 		foreach ( $this->notices as $notice ) {
-			echo `<div class="<?= $notice->class; ?>"><p><?= $notice->message ?></p></div>`;
+			echo "<div class='notice $notice->class'><p>$notice->message</p></div>";
 		}
 	}
 
