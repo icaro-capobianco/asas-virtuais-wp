@@ -41,7 +41,7 @@ class AsasVirtuaisWP {
 
 	}
 
-	public function framework_instance( $plugin_file, $args = [] ) {
+	public function add_plugin( $plugin_file, $args = [] ) {
 
 		if ( function_exists( 'asas_virtuais' ) ) {
 			$plugin_slug = wp_basename( $plugin_file, '.php' );
