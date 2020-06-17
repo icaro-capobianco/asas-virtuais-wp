@@ -15,9 +15,12 @@ class AsasVirtuaisWP {
 
 	private $plugin_file;
 
-	protected function __construct( $plugin_file ) {
+	private $init_args;
+
+	protected function __construct( $plugin_file, $args = [] ) {
 
 		$this->plugin_file = $plugin_file;
+		$this->init_args = $args;
 
 		register_activation_hook( $plugin_file, [ $this, 'activation_check' ] );
 
@@ -26,23 +29,23 @@ class AsasVirtuaisWP {
 		add_action( 'admin_notices', [ $this, 'admin_notices' ], 15 );
 
 		if ( $this->is_environment_compatible() ) {
-			add_action( 'plugins_loaded', array( $this, 'init_plugin' ) );
+			$this->init_plugin();
 		}
 	}
 	public function init_plugin() {
 		if ( ! $this->is_wp_compatible() ) {
 			return;
 		}
-		$loader = require_once( plugin_dir_path( $plugin_file ) . 'vendor/autoload.php' );
+		$loader = require_once( plugin_dir_path( $this->plugin_file ) . 'vendor/autoload.php' );
 		$loader->addPsr4( 'AsasVirtuaisWP\\', plugin_dir_path( __FILE__ ) . 'includes' );
 
-		require_once( plugin_dir_path( __FILE__ ) . 'includes/AsasVirtuais.php' );
-		asas_virtuais()->initialize( $plugin_file, __FILE__ );
+		require_once( plugin_dir_path( __FILE__ ) . 'includes/functions.php' );
+		asas_virtuais()->initialize( $this->plugin_file, __FILE__, $this->init_args );
 	}
-	public static function instance() {
+	public static function instance( $plugin_file, $args = [] ) {
 
 		if ( null === self::$instance ) {
-			self::$instance = new self();
+			self::$instance = new self( $plugin_file, $args );
 		}
 
 		return self::$instance;
@@ -127,5 +130,3 @@ class AsasVirtuaisWP {
 		}
 
 }
-
-AsasVirtuaisWP::instance();
