@@ -40,13 +40,13 @@ class AsasVirtuais {
 		$this->framework_url = plugin_dir_url( __DIR__ );
 		$this->framework_dir = plugin_dir_path( __DIR__ );
 
-		$this->admin_manager = new \AsasVirtuaisWP\Admin\AdminManager();
+		$this->admin_manager = new Admin\AdminManager();
 
 		if ( isset( $args['custom_fields_dir'] ) ) {
-			$this->acf_manager = new \AsasVirtuaisWP\ACF\ACFManager( $args['custom_fields_dir'] );
+			$this->acf_manager = new ACF\ACFManager( $args['custom_fields_dir'] );
 		}
 		if ( isset( $args['assets_dir'] ) ) {
-			$this->assets_manager = new \AsasVirtuaisWP\Assets\AssetsManager( $args['assets_dir'], $this->plugin_version, $this->plugin_prefix );
+			$this->assets_manager = new Assets\AssetsManager( $args['assets_dir'], $this->plugin_version, $this->plugin_prefix );
 		}
 
 		foreach( glob( $this->framework_dir . "lib/*.php") as $lib_file ){

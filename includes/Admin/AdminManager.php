@@ -1,6 +1,6 @@
 <?php
 
-namespace AsasVirtuaisWP\Admin;
+namespace AsasVirtuaisWP\V2_0_0\Admin;
 
 class AdminManager {
 
