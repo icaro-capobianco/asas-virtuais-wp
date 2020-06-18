@@ -1,5 +1,5 @@
 <?php
-namespace AsasVirtuaisWP\V2_0_3;
+namespace AsasVirtuaisWP\V2_0_4;
 
 defined( 'ABSPATH' ) or exit;
 
