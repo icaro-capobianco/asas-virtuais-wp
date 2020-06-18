@@ -1,5 +1,5 @@
 <?php
-namespace AsasVirtuaisWP\V2_0_0\Traits;
+namespace AsasVirtuaisWP\V2_0_3\Traits;
 
 trait CustomFieldsTrait {
 

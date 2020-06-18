@@ -1,5 +1,5 @@
 <?php
-namespace AsasVirtuaisWP\V2_0_0\Taxonomy\Models;
+namespace AsasVirtuaisWP\V2_0_3\Taxonomy\Models;
 
 class Tag extends AbstractTerm {
 

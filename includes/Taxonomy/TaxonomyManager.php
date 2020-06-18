@@ -1,6 +1,6 @@
 <?php
 
-namespace AsasVirtuaisWP\V2_0_0\Taxonomy;
+namespace AsasVirtuaisWP\V2_0_3\Taxonomy;
 
 class TaxonomyManager {
 
