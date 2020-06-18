@@ -1,6 +1,6 @@
 <?php
 
-namespace AsasVirtuaisWP\Models;
+namespace AsasVirtuaisWP\V2_0_4\Models;
 
 class Post {
 
