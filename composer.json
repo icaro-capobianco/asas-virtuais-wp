@@ -15,7 +15,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "AsasVirtuaisWP\\V2_0_4\\": "includes/"
+            "AsasVirtuaisWP\\V2_0_5\\": "includes/"
         }
     }
 }

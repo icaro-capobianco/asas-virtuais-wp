@@ -1,5 +1,5 @@
 <?php
-namespace AsasVirtuaisWP\V2_0_4\CPT;
+namespace AsasVirtuaisWP\V2_0_5\CPT;
 
 class CPTManager {
 

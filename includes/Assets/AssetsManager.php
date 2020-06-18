@@ -1,6 +1,6 @@
 <?php
 
-namespace AsasVirtuaisWP\V2_0_4\Assets;
+namespace AsasVirtuaisWP\V2_0_5\Assets;
 
 class AssetsManager {
 
