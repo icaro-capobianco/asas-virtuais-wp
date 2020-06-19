@@ -57,4 +57,4 @@ if ( ! class_exists( '\AsasVirtuais\WP\Framework\TakeOff' ) ) {
 	}
 }
 
-return TakeOff::instance()->register_version( __FILE__, '3.0.0' );
+return TakeOff::instance()->register_version( __FILE__, '3.0.1' );
