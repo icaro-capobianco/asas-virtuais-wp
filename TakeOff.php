@@ -5,25 +5,27 @@ defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\AsasVirtuais\WP\Framework\TakeOff' ) ) {
 	class TakeOff {
+		private static $instance;
 		private $version;
 		private $file;
 		private $plugins = [];
 		private function __construct() {
 		}
-		public function fly( $autoload, $plugin_file, $args ) {
+		public function fly( $autoload, $plugin_file, $args = [] ) {
 			/** Dir to the framework latests version required across all plugins */
-			$includes_dir = dirname( $this->file ) . 'includes/';
+			$includes_dir = dirname( $this->file ) . '/includes/';
 			/** Set the autoload Psr4 path */
-			$autoload->setPsr4( 'AsasVirtuaisWP\\', $includes_dir . 'includes/' );
+			$autoload->setPsr4( 'AsasVirtuaisWP\\', $includes_dir );
 			/** Require functions file with the func asas_virtuais */
 			require_once( $includes_dir . 'functions.php' );
 			/** Register every plugin that required this framework */
 			$plugin_slug = wp_basename( $plugin_file, '.php' );
 			$this->plugins[$plugin_slug] = $args;
+			/** Instance of the framework for the plugin */
+			$framework_instance = asas_virtuais( $plugin_slug )->initialize( $plugin_file, $args );
 			/** Trigger loaded action */
 			do_action( 'asas/loaded' );
-			/** Instance of the framework for the plugin */
-			return asas_virtuais( $plugin_slug )->initialize( $plugin_file, $args );
+			return $framework_instance;
 		}
 		public function register_version( $file, $version ) {
 			if ( did_action( 'asas/loaded' ) ) {
