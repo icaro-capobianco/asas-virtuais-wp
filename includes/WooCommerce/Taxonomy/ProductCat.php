@@ -1,7 +1,7 @@
 <?php
-namespace AsasVirtuaisWP\V2_0_5\WooCommerce\Taxonomy;
+namespace AsasVirtuaisWP\WooCommerce\Taxonomy;
 
-use AsasVirtuaisWP\V2_0_5\Taxonomy\AbstractTerm;
+use AsasVirtuaisWP\Taxonomy\AbstractTerm;
 
 class ProductCat extends AbstractTerm {
 

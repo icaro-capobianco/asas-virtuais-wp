@@ -1,5 +1,5 @@
 <?php
-namespace AsasVirtuaisWP\V2_0_5\ACF;
+namespace AsasVirtuaisWP\ACF;
 
 class ACFManager {
 

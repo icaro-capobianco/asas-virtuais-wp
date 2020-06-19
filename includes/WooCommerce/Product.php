@@ -1,6 +1,6 @@
 <?php
 
-namespace AsasVirtuaisWP\V2_0_5\WooCommerce;
+namespace AsasVirtuaisWP\WooCommerce;
 
 class Product {
 

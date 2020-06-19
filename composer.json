@@ -12,10 +12,5 @@
             "homepage": "https://asasvirtuais.com",
             "role": "Developer"
         }
-    ],
-    "autoload": {
-        "psr-4": {
-            "AsasVirtuaisWP\\V2_0_5\\": "includes/"
-        }
-    }
+    ]
 }

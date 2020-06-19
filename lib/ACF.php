@@ -31,7 +31,7 @@ if ( ! function_exists( 'av_acf_field_group' ) ) {
 		}
 		$key   = AV_ACF_KEY_PREFIX . $slug;
 		$title = $label;
-		return [
+		$defaults = [
 			'key'                   => $key,
 			'title'                 => $title,
 			'fields'                => $fields,
@@ -45,6 +45,7 @@ if ( ! function_exists( 'av_acf_field_group' ) ) {
 			'active'                => true,
 			'description'           => '',
 		];
+		return array_replace( $defaults, $args );
 	}
 }
 /**
