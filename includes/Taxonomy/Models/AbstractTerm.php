@@ -1,5 +1,5 @@
 <?php
-namespace AsasVirtuaisWP\V2_0_4\Taxonomy\Models;
+namespace AsasVirtuaisWP\Taxonomy\Models;
 
 abstract class AbstractTerm {
 	protected $wp_term;

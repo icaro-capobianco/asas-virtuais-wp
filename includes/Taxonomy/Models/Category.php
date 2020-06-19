@@ -1,5 +1,5 @@
 <?php
-namespace AsasVirtuaisWP\V2_0_4\Taxonomy\Models;
+namespace AsasVirtuaisWP\Taxonomy\Models;
 
 class Category extends AbstractTerm {
 

@@ -1,5 +1,5 @@
 <?php
-namespace AsasVirtuaisWP\V2_0_4\Traits;
+namespace AsasVirtuaisWP\Traits;
 
 trait ImportTrait {
 

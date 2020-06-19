@@ -1,5 +1,5 @@
 <?php
-namespace AsasVirtuaisWP\V2_0_4;
+namespace AsasVirtuaisWP;
 
 defined( 'ABSPATH' ) or exit;
 
@@ -41,6 +41,7 @@ class AsasVirtuais {
 		$this->framework_dir = plugin_dir_path( __DIR__ );
 
 		$this->admin_manager = new Admin\AdminManager();
+		$this->cpt_manager = new CPT\CPTManager();
 
 		if ( isset( $args['custom_fields_dir'] ) ) {
 			$this->acf_manager = new ACF\ACFManager( $args['custom_fields_dir'] );
