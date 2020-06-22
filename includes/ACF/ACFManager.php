@@ -3,13 +3,17 @@ namespace AsasVirtuaisWP\ACF;
 
 class ACFManager {
 
-	private $custom_fields_dir;
-
-	public function __construct( $custom_fields_dir ) {
-		$this->custom_fields_dir = $custom_fields_dir;
+	public function __construct() {
+		add_action( 'acf/init', [ $this, 'acf_initialized' ] );
 	}
 
-	public function require_fields_file( $filename, $dirpath = false ) {
+	public function acf_initialized() {
+		foreach( $this->pages as $page_options ) {
+			acf_add_options_page( $page_options );
+		}
+	}
+
+	public function require_fields_file( $dirpath, $filename ) {
 
 		if ( ! $dirpath ) {
 			$dirpath = $this->custom_fields_dir;
@@ -20,9 +24,21 @@ class ACFManager {
 		if ( file_exists( $filepath ) ) {
 			require_once $filepath;
 		} else {
-			asas_virtuais()->admin->admin_error( "Could not load custom fields from file: $filepath" );
+			asas_virtuais()->admin_manager()->admin_error( "Could not load custom fields from file: $filepath" );
 		}
 
+	}
+
+	private $pages = [];
+	public function settings_page( $label, $args = [] ) {
+
+		$defaults = [
+            'page_title'  => $label,
+            'menu_title'  => $label,
+            'parent_slug' => 'options-general.php',
+		];
+		$options = array_replace( $defaults, $args );
+		$this->pages[] = $options;
 	}
 
 }
