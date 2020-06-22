@@ -1,7 +1,7 @@
 <?php
 namespace AsasVirtuaisWP\WooCommerce\Taxonomy;
 
-use \AsasVirtuaisWP\Taxonomy\AbstractTerm;
+use AsasVirtuaisWP\Taxonomy\AbstractTerm;
 
 class ProductTag extends AbstractTerm {
 

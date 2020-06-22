@@ -1,10 +1,8 @@
 <?php
 
-namespace AsasVirtuais\WP\PluginFramework\V2_0_0;
-
 defined( 'ABSPATH' ) or exit;
 
-class AsasVirtuaisWP {
+class AsasVirtuaisWPLoader {
 
 	const MINIMUM_PHP_VERSION = '7.3';
 	const MINIMUM_WP_VERSION = '5.0';

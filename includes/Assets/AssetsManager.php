@@ -54,8 +54,9 @@ class AssetsManager {
 	}
 	private function enqueue_script( $script ) {
 		wp_enqueue_script( $script->name, $script->src, $script->deps, $this->version, $script->footer );
-		$localize = $this->localize[ $script->name ] ?? false;
-		if ( $localize ) {
+		$localize_arr = $this->localize[ $script->name ] ?? false;
+		if ( $localize_arr ) {
+			foreach( $localize_arr as $localize )
 			wp_localize_script( $script->name, $localize->name, $localize->data );
 		}
 	}
@@ -82,7 +83,7 @@ class AssetsManager {
 	}
 
 	public function localize_script( $handle, $name, $data ) {
-		$this->localize[$handle] = (object) compact( 'name', 'data' );
+		$this->localize[$handle][] = (object) compact( 'name', 'data' );
 	}
 
 	public static function asset_file_url( $name, $dir_path, $extension ) {
