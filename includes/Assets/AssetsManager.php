@@ -13,10 +13,9 @@ class AssetsManager {
 	public $admin_scripts = [];
 	public $plugin_assets_dir;
 
-	public function __construct( $assets_dir, $version, string $prefix = '' ) {
-		$this->plugin_assets_dir = $assets_dir;
-		$this->prefix  = $prefix;
-		$this->version = $version;
+	public function __construct( $args = [] ) {
+		$this->prefix  = $args['prefix'] ?? '';
+		$this->version = $args['version'] ?? '';
 
 		add_action( 'wp_enqueue_scripts', [$this, 'enqueue_scripts'] );
 		add_action( 'wp_enqueue_scripts', [$this, 'enqueue_styles'] );
