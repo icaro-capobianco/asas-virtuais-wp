@@ -24,7 +24,7 @@ class ACFManager {
 		if ( file_exists( $filepath ) ) {
 			require_once $filepath;
 		} else {
-			asas_virtuais()->admin->admin_error( "Could not load custom fields from file: $filepath" );
+			asas_virtuais()->admin_manager()->admin_error( "Could not load custom fields from file: $filepath" );
 		}
 
 	}
