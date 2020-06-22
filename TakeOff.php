@@ -12,34 +12,52 @@ if ( ! class_exists( '\AsasVirtuais\WP\Framework\TakeOff' ) ) {
 		private function __construct() {
 		}
 		public function fly( $autoload, $plugin_file, $args = [] ) {
-			/** Dir to the framework latests version required across all plugins */
-			$includes_dir = dirname( $this->file ) . '/includes/';
-			/** Set the autoload Psr4 path */
-			$autoload->setPsr4( 'AsasVirtuaisWP\\', $includes_dir );
-			/** Require functions file with the func asas_virtuais */
-			require_once( $includes_dir . 'functions.php' );
+
 			/** Register every plugin that required this framework */
 			$plugin_slug = wp_basename( $plugin_file, '.php' );
 			$this->plugins[$plugin_slug] = $args;
+
+			// Set autoload
+			if ( ! did_action( 'asas/loaded' ) ) {
+				$this->load_framework( $autoload );
+			}
+
 			/** Instance of the framework for the plugin */
 			$framework_instance = asas_virtuais( $plugin_slug )->initialize( $plugin_file, $args );
 			/** Trigger loaded action */
-			do_action( 'asas/loaded' );
 			return $framework_instance;
 		}
+		public function load_framework( $autoload ) {
+			/** Set autoload */
+			$includes_dir = dirname( $this->file ) . '/includes/';
+			$autoload->setPsr4( 'AsasVirtuaisWP\\', $includes_dir );
+
+			/** Require asas_virtuais() */
+			require_once( $includes_dir . 'functions.php' );
+
+			/** Require other libraries */
+			foreach( glob( __DIR__ . "/lib/*.php") as $lib_file ){
+				require_once $lib_file;
+			}
+
+			/** Initialize framework default instance */
+			asas_virtuais()->initialize( __FILE__, [
+				'version' => '3.0.1',
+				'prefix' => 'asas_'
+			] );
+
+			/** Trigger action asas/loaded */
+			do_action( 'asas/loaded' );
+		}
 		public function register_version( $file, $version ) {
-			if ( did_action( 'asas/loaded' ) ) {
-				throw new \Exception('Loading framework version too late, framework already loaded');
-			} else {
-				if ( version_compare( $version, $this->version ) > 0 ) {
-					$this->version = $version;
-					$this->file    = $file;
-				}
+			if ( version_compare( $version, $this->version ) > 0 ) {
+				$this->version = $version;
+				$this->file    = $file;
 			}
 			return $this;
 		}
 		public static function instance() {
-	
+
 			if ( null === self::$instance ) {
 				self::$instance = new self();
 			}
