@@ -67,7 +67,7 @@ class AsasVirtuais {
 	public function update_manager( $args = [] ) {
 		if ( ! isset( $this->update_manager ) ) {
 			$this->update_manager = PuC\UpdateManager::instance();
-			$this->update_manager->register_plugin( $this->plugin_name, $args );
+			$this->update_manager->register_plugin( $this->plugin_file, $args );
 		}
 		return $this->update_manager;
 	}

@@ -9,7 +9,7 @@ class ACFManager {
 
 	public function acf_initialized() {
 		foreach( $this->pages as $page_options ) {
-			\call_user_func_array( 'acf_add_options_sub_page', $page_options );
+			acf_add_options_page( $page_options );
 		}
 	}
 
