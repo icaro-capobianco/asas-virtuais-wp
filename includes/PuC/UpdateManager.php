@@ -80,7 +80,6 @@ class UpdateManager {
 	private function valid_args( $args ) {
 		return isset(
 			$args['plugin_file'],
-			$args['plugin_name'],
 			$args['puc_path'],
 			$args['meta_url'],
 		);
