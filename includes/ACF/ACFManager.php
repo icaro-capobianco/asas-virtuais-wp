@@ -4,7 +4,7 @@ namespace AsasVirtuaisWP\ACF;
 class ACFManager {
 
 	public function __construct() {
-		add_action( 'acf/init', [ $this, 'acf_initialized' ] );
+		add_action( 'plugins_loaded', [ $this, 'acf_initialized' ], 30, 1 );
 	}
 
 	public function acf_initialized() {
