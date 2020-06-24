@@ -54,8 +54,8 @@ class UpdateManager {
 
 				$this->pre_release_plugins[$plugin_slug] = $plugin_name;
 
-				if ( get_field( $plugin_slug."_pre_release", 'option' ) ) {
-					return $this->set_with_pre_releases( $args['pre_release_options'] );
+				if ( get_field( av_sanitize_title_with_underscores($plugin_slug)."_pre_release", 'option' ) ) {
+					return $this->set_with_pre_releases( $plugin_slug, $args['pre_release_options'] );
 				}
 			}
 
