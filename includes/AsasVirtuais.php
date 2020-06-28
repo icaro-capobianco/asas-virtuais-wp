@@ -17,8 +17,8 @@ class AsasVirtuais {
 		return self::$instances[$plugin_slug];
     }
 
-	public $plugin_prefix;
 	public $plugin_version;
+	public $plugin_prefix;
 	public $plugin_name;
 	public $plugin_file;
 	public $plugin_url;
@@ -70,6 +70,17 @@ class AsasVirtuais {
 		}
 		$this->update_manager->register_plugin( $this->plugin_file, $args );
 		return $this->update_manager;
+	}
+	private $rest_manager;
+	public function rest_manager( $route_namespace = false ) {
+		if ( ! isset( $this->rest_manager ) ) {
+			if ( ! $route_namespace ) {
+				$prefix = empty( $this->plugin_prefix ) ? $this->plugin_name : $this->plugin_prefix;
+				$route_namespace = "$prefix/v1";
+			}
+			$this->rest_manager = new API\RestManager( $route_namespace );
+		}
+		return $this->rest_manager;
 	}
 
 }
