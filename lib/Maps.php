@@ -26,7 +26,7 @@ if ( ! function_exists( 'av_map_repeater_and_filter' ) ) {
 
 if ( ! function_exists( 'av_index_repeater_reduce' ) ) {
 	function av_index_repeater_reduce( $index ) {
-		return function( $repeater, $acc ) use ( $index ) {
+		return function( $acc, $repeater ) use ( $index ) {
 			$i = $repeater[$index] ?? false;
 			if ( $i && is_scalar( $i ) ) {
 				if ( isset( $acc[$i] ) ) {
