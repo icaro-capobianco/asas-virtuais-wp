@@ -48,8 +48,6 @@ class Product {
 			av_import_admin_notice( "Product added with ID: $post_id" );
 		}
 
-		wp_set_object_terms( $post_id, 'simple', 'product_type' );
-
 		return new static( wc_get_product( $post_id ) );
 	}
 
