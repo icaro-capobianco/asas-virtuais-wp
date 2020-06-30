@@ -36,7 +36,7 @@ if ( ! class_exists( '\AsasVirtuais\WP\Framework\TakeOff' ) ) {
 			require_once( $includes_dir . 'functions.php' );
 
 			/** Require other libraries */
-			foreach( glob( __DIR__ . "/lib/*.php") as $lib_file ){
+			foreach( glob( dirname( $this->file ) . "/lib/*.php") as $lib_file ){
 				require_once $lib_file;
 			}
 
