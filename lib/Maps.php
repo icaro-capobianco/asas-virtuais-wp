@@ -43,6 +43,6 @@ if ( ! function_exists( 'av_index_repeater_reduce' ) ) {
 
 if ( ! function_exists( 'av_index_repeater' ) ) {
 	function av_index_repeater( $repeater, $index ) {
-		return array_reduce( av_index_repeater_reduce( $index ), $repeater, [] );
+		return array_reduce( $repeater, av_index_repeater_reduce( $index ), [] );
 	}
 }
