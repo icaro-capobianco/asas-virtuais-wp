@@ -30,10 +30,10 @@ if ( ! function_exists( 'av_index_repeater_reduce' ) ) {
 			$i = $repeater[$index] ?? false;
 			if ( $i && is_scalar( $i ) ) {
 				if ( isset( $acc[$i] ) ) {
-					$acc[$i] = is_array( $acc[$i] ) ? $acc[$i] : [ $acc[$i] ] ;
+					$acc[$i] = isset( $acc[$i][0] ) ? $acc[$i] : [ $acc[$i] ] ;
 					$acc[$i][] = $repeater;
 				} else {
-					$acc[$i] = $repeater;
+					$acc[$i] = [ $repeater ];
 				}
 			}
 			return $acc;
