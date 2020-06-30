@@ -18,7 +18,7 @@ class Product {
 	public function get_acf_id() {
 		return $this->get_id();
 	}
-	public static function get_essential_import_args() {
+	public static function essential_import_args() {
 		return ['post_title', 'slug'];
 	}
 	public static function find_existing_index( $data ) {
