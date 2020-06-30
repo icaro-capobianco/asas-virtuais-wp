@@ -36,13 +36,13 @@ if ( ! class_exists( '\AsasVirtuais\WP\Framework\TakeOff' ) ) {
 			require_once( $includes_dir . 'functions.php' );
 
 			/** Require other libraries */
-			foreach( glob( __DIR__ . "/lib/*.php") as $lib_file ){
+			foreach( glob( dirname( $this->file ) . "/lib/*.php") as $lib_file ){
 				require_once $lib_file;
 			}
 
 			/** Initialize framework default instance */
 			asas_virtuais()->initialize( __FILE__, [
-				'version' => '3.0.1',
+				'version' => '5.0.5',
 				'prefix' => 'asas_'
 			] );
 
@@ -75,4 +75,4 @@ if ( ! class_exists( '\AsasVirtuais\WP\Framework\TakeOff' ) ) {
 	}
 }
 
-return TakeOff::instance()->register_version( __FILE__, '3.0.1' );
+return TakeOff::instance()->register_version( __FILE__, '5.0.5' );

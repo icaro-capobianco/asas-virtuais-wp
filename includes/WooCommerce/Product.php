@@ -4,7 +4,7 @@ namespace AsasVirtuaisWP\WooCommerce;
 
 class Product {
 
-	use \AsasVirtuais\Traits\ImportTrait;
+	use \AsasVirtuaisWP\Traits\ImportTrait;
 
 	public $wc_product;
 
@@ -18,7 +18,7 @@ class Product {
 	public function get_acf_id() {
 		return $this->get_id();
 	}
-	public static function get_essential_import_args() {
+	public static function essential_import_args() {
 		return ['post_title', 'slug'];
 	}
 	public static function find_existing_index( $data ) {
@@ -47,8 +47,6 @@ class Product {
 		} else {
 			av_import_admin_notice( "Product added with ID: $post_id" );
 		}
-
-		wp_set_object_terms( $post_id, 'simple', 'product_type' );
 
 		return new static( wc_get_product( $post_id ) );
 	}

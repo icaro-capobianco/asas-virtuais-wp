@@ -23,3 +23,26 @@ if ( ! function_exists( 'av_map_repeater_and_filter' ) ) {
 		return array_filter( array_map( gsg_map_feature_repeater( $attributes ), $repeater ) );
 	}
 }
+
+if ( ! function_exists( 'av_index_repeater_reduce' ) ) {
+	function av_index_repeater_reduce( $index ) {
+		return function( $acc, $repeater ) use ( $index ) {
+			$i = $repeater[$index] ?? false;
+			if ( $i && is_scalar( $i ) ) {
+				if ( isset( $acc[$i] ) ) {
+					$acc[$i] = isset( $acc[$i][0] ) ? $acc[$i] : [ $acc[$i] ] ;
+					$acc[$i][] = $repeater;
+				} else {
+					$acc[$i] = [ $repeater ];
+				}
+			}
+			return $acc;
+		};
+	}
+}
+
+if ( ! function_exists( 'av_index_repeater' ) ) {
+	function av_index_repeater( $repeater, $index ) {
+		return array_reduce( $repeater, av_index_repeater_reduce( $index ), [] );
+	}
+}

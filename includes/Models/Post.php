@@ -4,6 +4,8 @@ namespace AsasVirtuaisWP\Models;
 
 class Post {
 
+	use \AsasVirtuaisWP\Traits\CustomFieldsTrait;
+
 	protected $wp_post;
 
 	public function __construct( \WP_Post $wp_post ) {
@@ -12,6 +14,9 @@ class Post {
 
 	public function get_id() {
 		return $this->wp_post->ID;
+	}
+	public function get_acf_id() {
+		return $this->get_id();
 	}
 	public function get_type() {
 		return $this->wp_post->post_type;

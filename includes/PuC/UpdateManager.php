@@ -5,11 +5,11 @@ class UpdateManager {
 
 	private function __construct() {
 
-		add_action( 'acf/init', [ $this, 'maybe_add_pre_release_settings_page' ], 1, 1 );
+		add_action( 'plugins_loaded', [ $this, 'maybe_add_pre_release_settings_page' ], 20, 1 );
 
 	}
 
-	private $pre_release_plugins = [];
+	public $pre_release_plugins = [];
 	public function maybe_add_pre_release_settings_page() {
 
 		if ( ! empty( $this->pre_release_plugins ) ) {
@@ -54,8 +54,8 @@ class UpdateManager {
 
 				$this->pre_release_plugins[$plugin_slug] = $plugin_name;
 
-				if ( get_field( $plugin_slug."_pre_release", 'option' ) ) {
-					return $this->set_with_pre_releases( $args['pre_release_options'] );
+				if ( get_field( av_sanitize_title_with_underscores($plugin_slug)."_pre_release", 'option' ) ) {
+					return $this->set_with_pre_releases( $plugin_slug, $args['pre_release_options'] );
 				}
 			}
 

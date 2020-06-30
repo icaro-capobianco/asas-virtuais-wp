@@ -17,8 +17,8 @@ class AsasVirtuais {
 		return self::$instances[$plugin_slug];
     }
 
-	public $plugin_prefix;
 	public $plugin_version;
+	public $plugin_prefix;
 	public $plugin_name;
 	public $plugin_file;
 	public $plugin_url;
@@ -67,9 +67,30 @@ class AsasVirtuais {
 	public function update_manager( $args = [] ) {
 		if ( ! isset( $this->update_manager ) ) {
 			$this->update_manager = PuC\UpdateManager::instance();
-			$this->update_manager->register_plugin( $this->plugin_file, $args );
 		}
+		$this->update_manager->register_plugin( $this->plugin_file, $args );
 		return $this->update_manager;
+	}
+	private $rest_manager;
+	public function rest_manager( $route_namespace = false ) {
+		if ( ! isset( $this->rest_manager ) ) {
+			if ( ! $route_namespace ) {
+				$prefix = empty( $this->plugin_prefix ) ? $this->plugin_name : $this->plugin_prefix;
+				$route_namespace = "$prefix/v1";
+			}
+			$this->rest_manager = new API\RestManager( $route_namespace );
+		}
+		return $this->rest_manager;
+	}
+	private $import_manager;
+	public function import_manager() {
+		if ( ! isset( $this->import_manager ) ) {
+			if ( ! isset( $this->rest_manager ) ) {
+				throw new \Exception('Must instantiate rest_manager before import_manager');
+			}
+			$this->import_manager = new Migration\ImportManager( $this );
+		}
+		return $this->import_manager;
 	}
 
 }
