@@ -4,7 +4,7 @@ namespace AsasVirtuaisWP\WooCommerce;
 
 class Product {
 
-	use \AsasVirtuais\Traits\ImportTrait;
+	use \AsasVirtuaisWP\Traits\ImportTrait;
 
 	public $wc_product;
 
