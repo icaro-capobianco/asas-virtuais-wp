@@ -71,7 +71,7 @@ class AsasVirtuais {
 		$this->update_manager->register_plugin( $this->plugin_file, $args );
 		return $this->update_manager;
 	}
-	private $rest_manager;
+	public $rest_manager;
 	public function rest_manager( $route_namespace = false ) {
 		if ( ! isset( $this->rest_manager ) ) {
 			if ( ! $route_namespace ) {
@@ -85,12 +85,6 @@ class AsasVirtuais {
 	private $import_manager;
 	public function import_manager( $token = false ) {
 		if ( ! isset( $this->import_manager ) ) {
-			if ( ! isset( $this->rest_manager ) ) {
-				throw new \Exception('Must instantiate rest_manager before import_manager');
-			}
-			if ( ! isset( $token ) ) {
-				throw new \Exception('To instantiate import manager, call import_manager( $token ) passing a Bearer token to be used in the import API');
-			}
 			$this->import_manager = new Migration\ImportManager( $this, $token );
 		}
 		return $this->import_manager;
