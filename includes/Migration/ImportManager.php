@@ -93,10 +93,7 @@ class ImportManager {
 		$this->notices[] = $notice;
 	}
 	public function import_exception( $th, $additional = false ) {
-		$message = "\nFile:" . $th->getFile() . "\nLine" . $th->getLine() . "\nMessage:" . $th->getMessage();
-		if ( $additional ) {
-			$message .= "\nAdditional input: " . $additional;
-		}
+		$message = av_get_error_details( $th );
 		$this->import_error( $message );
 	}
 

@@ -83,10 +83,13 @@ class AsasVirtuais {
 		return $this->rest_manager;
 	}
 	private $import_manager;
-	public function import_manager( $token ) {
+	public function import_manager( $token = false ) {
 		if ( ! isset( $this->import_manager ) ) {
 			if ( ! isset( $this->rest_manager ) ) {
 				throw new \Exception('Must instantiate rest_manager before import_manager');
+			}
+			if ( ! isset( $token ) ) {
+				throw new \Exception('To instantiate import manager, call import_manager( $token ) passing a Bearer token to be used in the import API');
 			}
 			$this->import_manager = new Migration\ImportManager( $this, $token );
 		}
