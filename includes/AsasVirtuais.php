@@ -83,12 +83,12 @@ class AsasVirtuais {
 		return $this->rest_manager;
 	}
 	private $import_manager;
-	public function import_manager() {
+	public function import_manager( $token ) {
 		if ( ! isset( $this->import_manager ) ) {
 			if ( ! isset( $this->rest_manager ) ) {
 				throw new \Exception('Must instantiate rest_manager before import_manager');
 			}
-			$this->import_manager = new Migration\ImportManager( $this );
+			$this->import_manager = new Migration\ImportManager( $this, $token );
 		}
 		return $this->import_manager;
 	}
