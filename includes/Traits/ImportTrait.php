@@ -52,11 +52,12 @@ trait ImportTrait {
 		 */
 		public static function import( $data ) {
 			static::validate_import_data( $data );
+			$insert_data = $data['insert_data'];
 			$existing_index = static::find_existing_index( $data );
 			if ( $existing_index ) {
 				$static = $existing_index;
 			} else {
-				$static = static::insert_from_import( $data );
+				$static = static::insert_from_import( $insert_data );
 			}
 
 			if( isset( $data['metadata'] ) ) {
@@ -83,17 +84,11 @@ trait ImportTrait {
 		 * @param boolean $validate To validate the $data or not
 		 * @return StaticInstance
 		 */
-		public static function insert_from_import( $data, $validate = false ) {
-
-			if ( $validate !== false ) {
-				static::validate_import_data( $data );
-			}
+		public static function insert_from_import( $args ) {
 
 			$args = [];
-			foreach ( static::insert_args() as $arg_key => $default_value ) {
-				$args[ $arg_key ] = $data[ $arg_key ] ?? $default_value;
-			}
-			$result = static::insert( $args );
+			$defaults = static::insert_args();
+			$result = static::insert( array_replace( $defaults, $args ) );
 
 			if ( ! $result ) {
 				throw new \Exception( "Failed to insert: \n" . av_wp_error_message( $result ) );
@@ -166,6 +161,9 @@ trait ImportTrait {
 		 * @return void
 		 */
 		protected static function validate_import_data( array $data ) {
+			if ( ! isset( $data['insert_data'] ) ) {
+				throw new \Exception( "Missing insert data on import, received only:\n" . var_export( $data, true ) );
+			}
 			foreach ( static::essential_import_args() as $arg ) {
 				if ( ( ! isset( $data[ $arg ] ) ) || ( empty( $data[ $arg ] ) ) ) {
 					throw new \Exception( "Missing or empty essential import $arg in import: \n" . var_export( $data, true ) );
