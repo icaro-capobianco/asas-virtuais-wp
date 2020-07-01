@@ -5,8 +5,11 @@ namespace AsasVirtuaisWP\Migration;
 class ImportManager {
 
 	private $importable_objects = [];
+	private $token = false;
 
-	public function __construct( $framework_instance ) {
+	public function __construct( $framework_instance, $token ) {
+
+		$this->token = $token;
 
 		$framework_instance->rest_manager()->add_endpoint( 'import/(?P<object_type>[a-zA-Z-_]+)', [
 			'methods' => [ 'POST', 'OPTIONS' ],
@@ -38,7 +41,7 @@ class ImportManager {
 		if( $authorization ) {
 			$token = explode( ' ', $authorization )[1] ?? false;
 			if( $token ) {
-				$saved_token = get_field( 'av_import_api_token', 'options' );
+				$saved_token = $this->token;
 				if( $saved_token && $saved_token === $token ) {
 					return true;
 				}
