@@ -23,10 +23,10 @@ class User {
 	}
 
 	public static function essential_import_args() {
-		return ['user_email'];
+		return ['insert_data'];
 	}
 	public static function find_existing_index( $data ) {
-		$email = $data['user_email'] ?? false;
+		$email = $data['insert_data']['user_email'] ?? false;
 		if ( $email ) {
 			$user = get_user_by_email( $email );
 			if ( $user ) {
@@ -36,10 +36,15 @@ class User {
 		return false;
 	}
 	public static function insert( $args ) {
+		remove_action( 'register_new_user', 'wp_send_new_user_notifications' );
+
+		$login = $args['user_login'] ?? $args['user_email'];
+		$args['user_login'] = $login;
+
 		$user_id = wp_insert_user( $args );
 
 		if ( is_wp_error( $user_id ) ) {
-			throw new \Exception( "Failed to insert user:\n" . av_wp_error_message( $post_id ) );
+			throw new \Exception( "Failed to insert user:\n" . av_wp_error_message( $user_id ) );
 		} else {
 			av_import_admin_notice( "User added with ID: $user_id" );
 		}
@@ -54,5 +59,8 @@ class User {
 		];
 	}
 
+	public function update_meta( $key, $value ) {
+		return update_user_meta( $this->get_id(), $key, $value );
+	}
+
 }
-remove_action( 'register_new_user',   'wp_send_new_user_notifications');

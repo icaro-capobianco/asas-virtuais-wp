@@ -54,6 +54,7 @@ trait ImportTrait {
 			static::validate_import_data( $data );
 			$insert_data = $data['insert_data'];
 			$existing_index = static::find_existing_index( $data );
+
 			if ( $existing_index ) {
 				$static = $existing_index;
 			} else {
@@ -86,7 +87,6 @@ trait ImportTrait {
 		 */
 		public static function insert_from_import( $args ) {
 
-			$args = [];
 			$defaults = static::insert_args();
 			$result = static::insert( array_replace( $defaults, $args ) );
 
@@ -164,7 +164,7 @@ trait ImportTrait {
 			if ( ! isset( $data['insert_data'] ) ) {
 				throw new \Exception( "Missing insert data on import, received only:\n" . var_export( $data, true ) );
 			}
-			foreach ( static::essential_import_args() as $arg ) {
+			foreach ( static::essential_import_args() as $k => $arg ) {
 				if ( ( ! isset( $data[ $arg ] ) ) || ( empty( $data[ $arg ] ) ) ) {
 					throw new \Exception( "Missing or empty essential import $arg in import: \n" . var_export( $data, true ) );
 				}
