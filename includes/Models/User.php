@@ -5,9 +5,7 @@ namespace AsasVirtuaisWP\Models;
 class User {
 
 	use \AsasVirtuaisWP\Traits\CustomFieldsTrait;
-	use \AsasVirtuaisWP\Traits\ImportTrait {
-		import as trait_import;
-	}
+	use \AsasVirtuaisWP\Traits\ImportTrait;
 
 	protected $wp_user;
 
