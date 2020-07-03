@@ -15,6 +15,14 @@ trait ImportTrait {
 		 */
 		abstract function get_acf_id();
 		/**
+		 * Update meta
+		 * @uses \update_post_meta
+		 * @param string $key
+		 * @param mixed $value
+		 * @return boolean
+		 */
+		abstract function update_meta( $key, $value );
+		/**
 		 * Undocumented function
 		 * @see import
 		 * @return array Array of essential args on self::import data param
@@ -57,6 +65,7 @@ trait ImportTrait {
 
 			if ( $existing_index ) {
 				$static = $existing_index;
+				av_import_admin_notice( "Imported object has existing index:\n" . var_export( $static->get_id(), true ) );
 			} else {
 				$static = static::insert_from_import( $insert_data );
 			}
@@ -116,27 +125,17 @@ trait ImportTrait {
 					} else {
 						$result = $this->update_meta( $key, $value );
 						$identifier = $this->get_id();
-					}
-					if ( $result ) {
-						av_import_admin_notice( "Successfully imported meta $key to: $identifier with:\n" . var_export( $value, true ) );
-					} else {
-						throw new \Exception( "Failed to import meta $key to: $identifier with \n" . var_export( $value, true ) );
+						if ( $result ) {
+							av_import_admin_notice( "Successfully imported meta $key to: $identifier with:\n" . var_export( $value, true ) );
+						} else {
+							throw new \Exception( "Failed to import meta $key to: $identifier with \n" . var_export( $value, true ) );
+						}
 					}
 				} catch (\Throwable $th) {
 					// TODO handle exception
 					av_import_admin_exception( $th );
 				}
 			}
-		}
-		/**
-		 * Update meta
-		 * @uses \update_post_meta
-		 * @param string $key
-		 * @param mixed $value
-		 * @return boolean
-		 */
-		public function update_meta( $key, $value ) {
-			return update_post_meta( $this->get_id(), $key, $value );
 		}
 		/**
 		 * Sets object Taxonomies
@@ -164,10 +163,9 @@ trait ImportTrait {
 			if ( ! isset( $data['insert_data'] ) ) {
 				throw new \Exception( "Missing insert data on import, received only:\n" . var_export( $data, true ) );
 			}
-			foreach ( static::essential_import_args() as $k => $arg ) {
-				if ( ( ! isset( $data[ $arg ] ) ) || ( empty( $data[ $arg ] ) ) ) {
-					throw new \Exception( "Missing or empty essential import $arg in import: \n" . var_export( $data, true ) );
-				}
+			$result = av_array_keys_exist_recursive( $data, static::essential_import_args() );
+			if ( ! $result ) {
+				throw new \Exception( "Missing or empty essential import $arg in import: \n" . var_export( $data, true ) );
 			}
 		}
 

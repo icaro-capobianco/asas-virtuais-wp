@@ -510,6 +510,8 @@ if ( ! function_exists( 'av_acf_import_field_data' ) ) {
 				}
 				if ( $r ) {
 					av_import_admin_notice( "Imported to ACF field $field_label in the object $object_id the value: " . var_export( $value, true ) );
+				} else {
+					av_import_admin_error( "Failed to import ACF field $field_label in the object $object_id with the value: " . var_export( $value, true ) );
 				}
 				return $r;
 			} else {
@@ -644,7 +646,7 @@ if ( ! function_exists( 'av_acf_import_field' ) ) {
 		$current_value = get_field( $name, $object_id, false );
 
 		if ( $current_value === $value ) {
-			return false;
+			return true;
 		}
 
 		$result = update_field( $name, $value, $object_id );
