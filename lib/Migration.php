@@ -13,7 +13,7 @@ if ( ! function_exists( 'av_import_admin_error' ) ) {
 }
 
 if ( ! function_exists( 'av_import_admin_exception' ) ) {
-	function av_import_admin_exception( $th, $additional = false ) {
+	function av_import_admin_exception( \Throwable $th, $additional = false ) {
 		asas_virtuais()->import_manager()->import_exception( $th, $additional );
 	}
 }

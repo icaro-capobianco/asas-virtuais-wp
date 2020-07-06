@@ -518,7 +518,7 @@ if ( ! function_exists( 'av_acf_import_field_data' ) ) {
 				throw new \Exception( "No field $name found for $object_id" );
 			}
 		} catch ( \Throwable $th ) {
-			av_import_admin_exception( $th . "Failed to import to ACF field $name in the object $object_id with the value: " . var_export( $value, true ) );
+			av_import_admin_exception( $th, "Failed to import to ACF field $name in the object $object_id with the value: " . var_export( $value, true ) );
 		}
 
 	}
