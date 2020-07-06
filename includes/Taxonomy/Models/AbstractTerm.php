@@ -12,14 +12,14 @@ abstract class AbstractTerm {
 		public function get_id() {
 			return $this->wp_term->term_id;
 		}
+		public function get_acf_id() {
+			return static::get_taxonomy() . '_' . $this->get_id();
+		}
 		public function get_name() {
 			return $this->wp_term->name;
 		}
 		public function get_slug() {
 			return $this->wp_term->slug;
-		}
-		public function get_acf_id() {
-			return static::get_taxonomy() . '_' . $this->get_id();
 		}
 		public function get_parent() {
 			return $this->wp_term->parent;
@@ -73,20 +73,28 @@ abstract class AbstractTerm {
 
 			if ( $existing_index ) {
 				av_import_admin_notice( "Existing index found for Term $slug, you may delete it and try again." );
-				$term = $existing_index;
+				$static = new static( $existing_index );
 			} else {
-				$term = static::insert_from_import_data( $data, false );
+				$static = static::insert_from_import_data( $data, false );
 			}
 
 			if ( isset( $data['children'] ) && is_array( $data['children'] ) ) {
-				static::import_children( $term->term_id, $data['children'] );
+				$static->import_children( $data['children'] );
 			}
 
 			if ( isset( $data['parent'] ) ) {
-				static::import_parent( $term->term_id, $data['parent'] );
+				$static->import_parent( $data['parent'] );
 			}
 
-			return new static( $term );
+			if ( isset( $data['metadata'] ) ) {
+				$static->import_metadata( $data['metadata'] );
+			}
+
+			if ( isset( $data['acf'] ) ) {
+				$static->import_metadata( $data['acf'], true );
+			}
+
+			return $static;
 		}
 		protected static function validate_import_data( array $data ) {
 			foreach ( static::$essential_import_args as $arg ) {
@@ -128,20 +136,43 @@ abstract class AbstractTerm {
 
 			av_import_admin_notice( "Term $slug added with ID: $term_id" );
 
-			return get_term( $term_id, static::get_taxonomy() );
+			return new static( get_term( $term_id, static::get_taxonomy() ) );
 		}
-		protected static function import_children( $term_id, array $children_slugs ) {
+		protected function import_children( array $children_slugs ) {
 			foreach ( $children_slugs as $slug ) {
 				$term = get_term_by( 'slug', $slug, static::get_taxonomy() );
-				if( $term ) {
-					wp_update_term( $term->term_id, static::get_taxonomy(), [ 'parent' => $term_id ] );
+				if ( $term && is_object( $term ) && isset( $term->term_id ) ) {
+					wp_update_term( $term->term_id, static::get_taxonomy(), [ 'parent' => $this->get_id() ] );
 				}
 			}
 		}
-		protected static function import_parent( $term_id, string $parent_slug ) {
-			$term = get_term_by( 'slug', $parent_slug, static::get_taxonomy() );
-			if ( $term ) {
-				wp_update_term( $term_id, static::get_taxonomy(), [ 'parent' => $term->term_id ] );
+		protected function import_parent( string $parent_slug ) {
+			$parent = get_term_by( 'slug', $parent_slug, static::get_taxonomy() );
+			if ( $parent && is_object( $parent ) && isset( $parent->term_id ) ) {
+				wp_update_term( $this->get_id(), static::get_taxonomy(), [ 'parent' => $parent->term_id ] );
+			} else {
+				av_import_admin_error( "Failed to set the term $parent_slug as the parent of the term " . $this->get_slug() . ".\n Details: " . var_export( $term, true ) );
+			}
+		}
+		public function import_metadata( $data, $acf = false ) {
+			foreach ( $data as $key => $value ) {
+				try {
+					if ( $acf ) {
+						$result = av_acf_import_field_data( $key, $value, $this->get_acf_id() );
+						$identifier = $this->get_acf_id();
+					} else {
+						$result = update_term_meta( $this->get_id(), $key, $value );
+						$identifier = $this->get_id();
+						if ( $result ) {
+							av_import_admin_notice( "Successfully imported meta $key to: $identifier with:\n" . var_export( $value, true ) );
+						} else {
+							throw new \Exception( "Failed to import meta $key to: $identifier with \n" . var_export( $value, true ) );
+						}
+					}
+				} catch (\Throwable $th) {
+					// TODO handle exception
+					av_import_admin_exception( $th );
+				}
 			}
 		}
 
