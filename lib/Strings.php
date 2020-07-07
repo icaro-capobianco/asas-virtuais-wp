@@ -5,9 +5,14 @@ if ( ! function_exists( 'av_sanitize_title_with_underscores' ) ) {
 	}
 }
 
-
 if ( ! function_exists( 'av_unslug' ) ) {
 	function av_unslug( $slug ) {
 		return ucwords( str_replace( [ '-', '_' ], ' ', $slug ) );
+	}
+}
+
+if ( ! function_exists( 'av_depascal_case' ) ) {
+	function av_depascal_case( $string ) {
+		return strtolower(preg_replace(['/([a-z\d])([A-Z])/', '/([^_])([A-Z][a-z])/'], '$1_$2', $string));	
 	}
 }
