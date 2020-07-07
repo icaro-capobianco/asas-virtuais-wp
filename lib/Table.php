@@ -17,7 +17,7 @@ if ( ! function_exists( 'av_output_table' ) ) {
 						<?php if( is_scalar( $value ) ): ?>
 							<td><?= $value ?></td>
 						<?php else: ?>
-							<td><?php print_r( $value ) ?></td>
+							<td><pre><?php print_r( $value ) ?></pre></td>
 						<?php endif; ?>
 					<?php endforeach; ?>
 					</tr>
