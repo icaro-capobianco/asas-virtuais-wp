@@ -4,6 +4,8 @@ if ( ! function_exists( 'av_output_table' ) ) {
 	function av_output_table( $data ) {
 		if ( is_scalar( $data ) ) {
 			echo "<table><tr><td>$data</td></tr></table>";
+		} elseif( is_object( $data ) ) {
+			echo "<table><tr><td>" . var_export( $data, true ) . "</td></tr></table>";
 		} else {
 			?>
 				<table>
