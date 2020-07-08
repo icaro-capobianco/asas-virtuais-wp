@@ -5,16 +5,25 @@ namespace AsasVirtuaisWP\Migration;
 class ImportManager {
 
 	private $importable_objects = [];
+	private $token = false;
 
-	public function __construct( $framework_instance ) {
+	public function __construct( $framework_instance, $token ) {
 
-		$framework_instance->rest_manager()->add_endpoint( 'import/(?P<object_type>[a-zA-Z-_]+)', [
-			'methods' => [ 'POST', 'OPTIONS' ],
-			'callback' => [ $this, 'route_callback' ],
-			'args' => [
-				'object_type'
-			]
-		] );
+		if ( $token ) {
+			$this->token = $token;
+
+			if ( ! isset( $framework_instance->rest_manager ) ) {
+				throw new \Exception('Must instantiate rest_manager before import_manager');
+			}
+
+			$framework_instance->rest_manager()->add_endpoint( 'import/(?P<object_type>[a-zA-Z-_]+)', [
+				'methods' => [ 'POST', 'OPTIONS' ],
+				'callback' => [ $this, 'route_callback' ],
+				'args' => [
+					'object_type'
+				]
+			] );
+		}
 	}
 
 	public function route_callback( $request ) {
@@ -24,8 +33,8 @@ class ImportManager {
 			$json = $request->get_body();
 			$result = $this->import_json( $json, $object_type );
 			return [
-				'notices' => $this->notices,
-				'errors' => $this->errors,
+				'notices' => array_merge( asas_virtuais()->import_manager()->notices, $this->notices ),
+				'errors' => array_merge( asas_virtuais()->import_manager()->errors, $this->errors ),
 				'result' => $result ?? false,
 			];
 		} else {
@@ -38,7 +47,7 @@ class ImportManager {
 		if( $authorization ) {
 			$token = explode( ' ', $authorization )[1] ?? false;
 			if( $token ) {
-				$saved_token = get_field( 'av_import_api_token', 'options' );
+				$saved_token = $this->token;
 				if( $saved_token && $saved_token === $token ) {
 					return true;
 				}
@@ -89,11 +98,8 @@ class ImportManager {
 		asas_virtuais()->admin_manager()->admin_notice( $notice );
 		$this->notices[] = $notice;
 	}
-	public function import_exception( $th, $additional = false ) {
-		$message = "\nFile:" . $th->getFile() . "\nLine" . $th->getLine() . "\nMessage:" . $th->getMessage();
-		if ( $additional ) {
-			$message .= "\nAdditional input: " . $additional;
-		}
+	public function import_exception( \Throwable $th, $additional = false ) {
+		$message = av_get_error_details( $th );
 		$this->import_error( $message );
 	}
 

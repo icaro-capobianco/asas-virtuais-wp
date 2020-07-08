@@ -510,13 +510,15 @@ if ( ! function_exists( 'av_acf_import_field_data' ) ) {
 				}
 				if ( $r ) {
 					av_import_admin_notice( "Imported to ACF field $field_label in the object $object_id the value: " . var_export( $value, true ) );
+				} else {
+					av_import_admin_error( "Failed to import ACF field $field_label in the object $object_id with the value: " . var_export( $value, true ) );
 				}
 				return $r;
 			} else {
 				throw new \Exception( "No field $name found for $object_id" );
 			}
 		} catch ( \Throwable $th ) {
-			av_import_admin_exception( $th . "Failed to import to ACF field $name in the object $object_id with the value: " . var_export( $value, true ) );
+			av_import_admin_exception( $th, "Failed to import to ACF field $name in the object $object_id with the value: " . var_export( $value, true ) );
 		}
 
 	}
@@ -597,8 +599,13 @@ if ( ! function_exists( 'av_acf_import_select_option' ) ) {
 }
 if ( ! function_exists( 'av_acf_import_row' ) ) {
 	function av_acf_import_row( $name, $value, $object_id, $index = false ) {
-		if ( $index && isset( $value[ $index ] ) && av_acf_repeater_has_index( $index, $value[ $index ], $name, $object_id ) ) {
-			return true;
+		if( $index ) {
+			if ( ! is_array( $index ) ) {
+				$index = [ $index ];
+			}
+			if ( av_acf_repeater_has_indexes( $index, $value, $name, $object_id ) ) {
+				return true;
+			}
 		}
 		$result = add_row( $name, $value, $object_id );
 		if ( ! $result ) {
@@ -607,14 +614,27 @@ if ( ! function_exists( 'av_acf_import_row' ) ) {
 		return $result;
 	}
 }
-if ( ! function_exists( 'av_acf_repeater_has_index' ) ) {
-	function av_acf_repeater_has_index( $index_name, $index_value, $name, $object_id ) {
+if ( ! function_exists( 'av_acf_repeater_has_indexes' ) ) {
+	function av_acf_repeater_has_indexes( $indexes, $lookfor, $name, $object_id ) {
 		if ( have_rows( $name, $object_id ) ) {
 			while ( have_rows( $name, $object_id ) ) {
 				the_row();
-				$sub_value = get_sub_field( $index_name );
-				if ( $sub_value === $index_value ) {
-					return true;
+				$has_all_indexes = true;
+				foreach( $indexes as $index ) {
+					$sub_value = get_sub_field( $index );
+					$lookfor_value = $lookfor[$index] ?? false;
+					if ( $lookfor_value ) {
+						if ( $sub_value ) {
+							if (  "$lookfor_value" !== "$sub_value" ) {
+								$has_all_indexes = false;
+							}
+						} else {
+							$has_all_indexes = false;
+						}
+					}
+				}
+				if ( $has_all_indexes ) {
+					return $has_all_indexes;
 				}
 			}
 		}
@@ -626,7 +646,7 @@ if ( ! function_exists( 'av_acf_import_field' ) ) {
 		$current_value = get_field( $name, $object_id, false );
 
 		if ( $current_value === $value ) {
-			return false;
+			return true;
 		}
 
 		$result = update_field( $name, $value, $object_id );

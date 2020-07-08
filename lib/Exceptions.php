@@ -1,20 +1,22 @@
 <?php
 
 if ( ! function_exists( 'av_get_error_details' ) ) {
-	function av_get_error_details( $e, $pre_msg = "", $separator = "\n" ) {
-		$msg = $pre_msg . "\n";
-		$class = get_class($e);
-		$e_msg = $e->getMessage();
-		$msg .= "File: {$e->getFile()}$separator\n";
-		$msg .= "Line: {$e->getLine()}$separator\n";
-		$msg .= "Type: {$class}$separator\n\n";
-		$msg .= "Msg: $e_msg\n\n";
-		if( $e instanceof \Swagger\Client\ApiException ) {
-			$msg.= "Response Body: {$e->getResponseBody()}\n";
+	function av_get_error_details( \Throwable $e, $pre_msg = "", $s = "\n" ) {
+		try {
+			$msg = "$pre_msg$s";
+			$class = get_class($e);
+			$e_msg = $e->getMessage();
+			$msg .= "File: {$e->getFile()}$s";
+			$msg .= "Line: {$e->getLine()}$s";
+			$msg .= "Type: {$class}$s";
+			$msg .= "Msg: $e_msg$s";
+			$previous = $e->getPrevious();
+			if ( $previous ) {
+				$msg .= "$s" . av_get_error_details( $previous, '', $s );
+			}
+			return $msg;
+		} catch (\Throwable $th) {
+			throw $e;
 		}
-		if( $e instanceof \Gsg\WooCommerce\Evosus\RequestException ) {
-			$msg.= "Passed params: \n" . gsg_pretty_print_r( $e->getRequestParams() );
-		}
-		return $msg;
 	}
 }
