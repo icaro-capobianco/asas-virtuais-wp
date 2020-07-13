@@ -297,7 +297,7 @@ if ( ! function_exists( 'av_acf_accordion_field' ) ) {
 }
 /** Button Group field defaults */
 if ( ! function_exists( 'av_button_group_field' ) ) {
-	function av_button_group_field( $label, $choices, $overwrite = [] ) {
+	function av_acf_button_group_field( $label, $choices, $overwrite = [] ) {
 		$field_data = [
 			'type'              => 'button_group',
 			'instructions'      => '',

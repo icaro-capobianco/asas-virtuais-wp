@@ -89,5 +89,12 @@ class AsasVirtuais {
 		}
 		return $this->import_manager;
 	}
+	private $taxonomy_manager;
+	public function taxonomy_manager( $prefix = '' ) {
+		if ( ! isset( $this->taxonomy_manager ) ) {
+			$this->taxonomy_manager = new Taxonomy\TaxonomyManager( $prefix );
+		}
+		return $this->taxonomy_manager;
+	}
 
 }
