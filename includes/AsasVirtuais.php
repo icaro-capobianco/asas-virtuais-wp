@@ -23,9 +23,11 @@ class AsasVirtuais {
 	public $plugin_file;
 	public $plugin_url;
 	public $plugin_dir;
-    public function initialize( $plugin_file, $args = [] ) {
+    public function initialize( string $plugin_file, array $args = [] ) {
 
-		$this->plugin_name = wp_basename( $plugin_file, '.php' );
+		$plugin_data = $args['plugin_data'] ?? get_plugin_data( $plugin_file );
+		$this->plugin_data = $plugin_data;
+		$this->plugin_name = $plugin_data['Name'] ?? wp_basename( $plugin_file, '.php' );
 		$this->plugin_prefix = $args['prefix'] ?? '';
 		$this->plugin_version = $args['version'] ?? false;
 		$this->plugin_file = $plugin_file;
@@ -95,6 +97,32 @@ class AsasVirtuais {
 			$this->taxonomy_manager = new Taxonomy\TaxonomyManager( $prefix );
 		}
 		return $this->taxonomy_manager;
+	}
+
+	/**
+	 * Undocumented function
+	 * @param mixed $plugins array of plugin index by plugin_dir/plugin_file strings and with the plugin name as value
+	 * @param bool $throw throw exception if any of the plugins is not active
+	 * @throws Exception
+	 * @return ( bool | null )
+	 */
+	public function plugins_are_active( array $plugins, bool $throw = false ) {
+
+		foreach ( $plugins as $plugin_dir_file => $plugin_name ) {
+
+			if ( ! is_plugin_active( $plugin_dir_file ) ) {
+
+				if ( $throw ) {
+
+					throw new \Exception( "The plugin $this->plugin_name requires the $plugin_name to be installed and active." );
+				} else {
+
+					return false;
+				}
+			}
+		}
+
+		return true;
 	}
 
 }

@@ -42,7 +42,7 @@ if ( ! class_exists( '\AsasVirtuais\WP\Framework\TakeOff' ) ) {
 
 			/** Initialize framework default instance */
 			asas_virtuais()->initialize( __FILE__, [
-				'version' => '5.0.8',
+				'version' => $this->version,
 				'prefix' => 'asas_'
 			] );
 
