@@ -100,25 +100,16 @@ class AsasVirtuais {
 	}
 
 	/**
-	 * Undocumented function
 	 * @param mixed $plugins array of plugin index by plugin_dir/plugin_file strings and with the plugin name as value
-	 * @param bool $throw throw exception if any of the plugins is not active
-	 * @throws Exception
-	 * @return ( bool | null )
+	 * @return bool
 	 */
-	public function plugins_are_active( array $plugins, bool $throw = false ) {
+	public function check_required_plugins( array $plugins ) {
 
 		foreach ( $plugins as $plugin_dir_file => $plugin_name ) {
 
 			if ( ! is_plugin_active( $plugin_dir_file ) ) {
-
-				if ( $throw ) {
-
-					throw new \Exception( "The plugin $this->plugin_name requires the $plugin_name to be installed and active." );
-				} else {
-
-					return false;
-				}
+				$this->admin_manager()->admin_error( "The plugin $this->plugin_name requires the $plugin_name to be installed and active." );
+				return false;
 			}
 		}
 
