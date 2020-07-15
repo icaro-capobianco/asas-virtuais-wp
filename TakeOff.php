@@ -30,7 +30,7 @@ if ( ! class_exists( '\AsasVirtuais\WP\Framework\TakeOff' ) ) {
 		public function load_framework( $autoload ) {
 			/** Set autoload */
 			$includes_dir = dirname( $this->file ) . '/includes/';
-			$autoload->setPsr4( 'AsasVirtuaisWP\\', $includes_dir );
+			$autoload->addPsr4( 'AsasVirtuaisWP\\', $includes_dir );
 
 			/** Require asas_virtuais() */
 			require_once( $includes_dir . 'functions.php' );
