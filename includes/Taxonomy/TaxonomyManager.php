@@ -10,7 +10,7 @@ class TaxonomyManager {
 	public function __construct( $prefix = '' ) {
 
 		$this->prefix = $prefix;
-		add_action( 'init', 'register_taxonomies' );
+		add_action( 'init', [ $this, 'register_taxonomies' ] );
 
 	}
 
@@ -28,7 +28,7 @@ class TaxonomyManager {
 			$args['labels'] = $this->taxonomy_labels( $slug );
 		}
 
-		$this->custom_taxonomies[$name] = compact( 'post_types', 'args' );
+		$this->custom_taxonomies[$name] = (object) compact( 'post_types', 'args' );
 
 	}
 
