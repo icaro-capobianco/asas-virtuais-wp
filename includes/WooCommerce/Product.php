@@ -2,14 +2,14 @@
 
 namespace AsasVirtuaisWP\WooCommerce;
 
-class Product extends \AsasVirtuaisWP\Models\Post {
+class Product extends \AsasVirtuaisWP\Models\AbstractPost {
 
 	use \AsasVirtuaisWP\Traits\ImportTrait;
 
 	public $wc_product;
 
 	public function __construct( $data ) {
-		if ( $data instanceof \WP_Product ) {
+		if ( $data instanceof \WC_Product ) {
 			$this->wc_product = $data;
 			$post = get_post( $this->wc_product->get_id() );
 			parent::__construct( $post );
@@ -18,6 +18,11 @@ class Product extends \AsasVirtuaisWP\Models\Post {
 			$this->wc_product = wc_get_product( $data );
 		}
 	}
+
+	public static function post_type() {
+		return 'product';
+	}
+
 	public function export_array() {
 		$array = parent::export_array();
 
@@ -32,9 +37,6 @@ class Product extends \AsasVirtuaisWP\Models\Post {
 
 		return $array;
 
-	}
-	public static function post_type() {
-		return 'post';
 	}
 
 }

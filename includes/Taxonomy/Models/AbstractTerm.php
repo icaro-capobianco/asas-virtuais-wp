@@ -151,7 +151,7 @@ abstract class AbstractTerm {
 			if ( $parent && is_object( $parent ) && isset( $parent->term_id ) ) {
 				wp_update_term( $this->get_id(), static::get_taxonomy(), [ 'parent' => $parent->term_id ] );
 			} else {
-				av_import_admin_error( "Failed to set the term $parent_slug as the parent of the term " . $this->get_slug() . ".\n Details: " . var_export( $term, true ) );
+				av_import_admin_error( "Failed to set the term $parent_slug as the parent of the term " . $this->get_slug() . ".\n Details: " . var_export( $parent, true ) );
 			}
 		}
 		public function import_metadata( $data, $acf = false ) {
