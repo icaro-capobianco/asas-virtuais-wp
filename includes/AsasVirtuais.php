@@ -27,7 +27,7 @@ class AsasVirtuais {
 	public $plugin_dir;
     public function initialize( string $plugin_file, array $args = [] ) {
 
-		$plugin_data = $args['plugin_data'] ?? get_plugin_data( $plugin_file );
+		$plugin_data = $args['plugin_data'] ?? av_get_plugin_data( $plugin_file, false, false );
 		$this->plugin_data = $plugin_data;
 		$this->plugin_prefix = $args['prefix'] ?? '';
 		$this->plugin_version = $args['version'] ?? $plugin_data['Version'];
@@ -111,7 +111,7 @@ class AsasVirtuais {
 		foreach ( $plugins as $plugin_dir_file => $plugin_name ) {
 
 			if ( ! is_plugin_active( $plugin_dir_file ) ) {
-				$this->admin_manager()->admin_error( "The plugin $this->plugin_name requires the $plugin_name to be installed and active." );
+				$this->admin_manager()->admin_error( "The plugin $this->plugin_name requires the plugin $plugin_name to be installed and active." );
 				return false;
 			}
 		}
