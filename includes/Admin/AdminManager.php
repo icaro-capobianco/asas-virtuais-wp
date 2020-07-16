@@ -30,6 +30,10 @@ class AdminManager {
 		$this->admin_notice( $message, 'success', $dismissible );
 	}
 
+	public function admin_error_from_exception( \Throwable $th ) {
+		$this->admin_error( "<pre>" . av_get_error_details( $th ) . "</pre>" );
+	}
+
 	public function display_admin_notices() {
 		foreach ( $this->notices as $notice ) {
 			echo "<div class='notice $notice->class'><p>$notice->message</p></div>";

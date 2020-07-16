@@ -20,3 +20,9 @@ if ( ! function_exists( 'av_get_error_details' ) ) {
 		}
 	}
 }
+
+if ( ! function_exists( 'av_admin_error_from_exception' ) ) {
+	function av_admin_error_from_exception( \Throwable $th ) {
+		asas_virtuais()->admin_manager()->admin_error_from_exception( $th );
+	}
+}

@@ -44,50 +44,40 @@ class UpdateManager {
 		return self::$instance;
 	}
 
-	public function register_plugin( $plugin_file, $args ) {
-		$plugin_name = get_plugin_data( $plugin_file )['Name'];
-		$plugin_slug = wp_basename( $plugin_file, '.php' );
+	public function register_plugin( $framework_instance, $args ) {
+		$plugin_name = $framework_instance->plugin_name;
+		$plugin_slug = wp_basename( $framework_instance->plugin_file, '.php' );
 
-		if ( $this->valid_args( $args ) ) {
+		$puc_path = $args['puc_path'] ?? false;
+		$meta_url = $args['meta_url'] ?? false;
+		$pre_release_url = $args['pre_release_url'] ?? false;
 
-			if ( isset( $args['pre_release_options'] ) ) {
-
+		if ( ! class_exists( 'Puc_v4_Factory' ) && ! include_once( $puc_path ) ) {
+			return asas_virtuais()->admin_manager()->admin_warning( 'Plugin updater could not be loaded for the plugin: ' . $plugin_name );
+		}
+		if ( $meta_url && $plugin_slug ) {
+			if ( $pre_release_url ) {
 				$this->pre_release_plugins[$plugin_slug] = $plugin_name;
-
 				if ( get_field( av_sanitize_title_with_underscores($plugin_slug)."_pre_release", 'option' ) ) {
-					return $this->set_with_pre_releases( $plugin_slug, $args['pre_release_options'] );
+					return $this->build_update_checker( $pre_release_url, $plugin_file, $plugin_name );
 				}
 			}
-
-			return $this->build_update_checker( $plugin_slug, $args );
-
+			return $this->build_update_checker( $meta_url, $plugin_file, $plugin_name );
 		} else {
 			asas_virtuais()->admin_manager()->admin_warning( 'Plugin updater initialized incorrectly for the plugin: ' . $plugin_name );
 		}
 	}
 
-	private function set_with_pre_releases( $plugin_slug, $args ) {
-		if ( $this->valid_args( $args ) ) {
-			return $this->build_update_checker( $plugin_slug, $args );
+	private function build_update_checker( $meta_url, $plugin_file, $plugin_slug ) {
+		if ( class_exists( 'Puc_v4_Factory' ) ) {
+			$myUpdateChecker = \Puc_v4_Factory::buildUpdateChecker(
+				$meta_url,
+				$plugin_file,
+				$plugin_slug,
+			);
 		} else {
-			asas_virtuais()->admin_manager()->admin_warning( 'Plugin updater initialized incorrectly, using Pre-Release for the plugin: ' . $plugin_name );
+			asas_virtuais()->admin_manager()->admin_warning( 'Plugin updater class not found for the plugin: ' . $plugin_slug );
 		}
-	}
-	private function build_update_checker( $plugin_slug, $args ) {
-		require_once $args['puc_path'];
-		$myUpdateChecker = \Puc_v4_Factory::buildUpdateChecker(
-			$args['meta_url'],
-			$args['plugin_file'],
-			$plugin_slug,
-		);
-	}
-
-	private function valid_args( $args ) {
-		return isset(
-			$args['plugin_file'],
-			$args['puc_path'],
-			$args['meta_url'],
-		);
 	}
 
 }
