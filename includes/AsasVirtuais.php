@@ -17,8 +17,10 @@ class AsasVirtuais {
 		return self::$instances[$plugin_slug];
     }
 
+	public $plugin_data;
 	public $plugin_version;
 	public $plugin_prefix;
+	public $plugin_slug;
 	public $plugin_name;
 	public $plugin_file;
 	public $plugin_url;
@@ -27,9 +29,10 @@ class AsasVirtuais {
 
 		$plugin_data = $args['plugin_data'] ?? get_plugin_data( $plugin_file );
 		$this->plugin_data = $plugin_data;
-		$this->plugin_name = $plugin_data['Name'] ?? wp_basename( $plugin_file, '.php' );
 		$this->plugin_prefix = $args['prefix'] ?? '';
-		$this->plugin_version = $args['version'] ?? false;
+		$this->plugin_version = $args['version'] ?? $plugin_data['Version'];
+		$this->plugin_slug = wp_basename( $plugin_file, '.php' );
+		$this->plugin_name = $plugin_data['Name'] ?? $this->plugin_slug;
 		$this->plugin_file = $plugin_file;
 		$this->plugin_url = plugin_dir_url( $plugin_file );
 		$this->plugin_dir = plugin_dir_path( $plugin_file );
@@ -70,7 +73,7 @@ class AsasVirtuais {
 		if ( ! isset( $this->update_manager ) ) {
 			$this->update_manager = PuC\UpdateManager::instance();
 		}
-		$this->update_manager->register_plugin( $this->plugin_file, $args );
+		$this->update_manager->register_plugin( $framework_instance, $args );
 		return $this->update_manager;
 	}
 	public $rest_manager;
