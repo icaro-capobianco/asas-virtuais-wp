@@ -53,7 +53,7 @@ if ( ! function_exists( 'av_acf_field_group' ) ) {
  */
 if ( ! function_exists( 'av_acf_location' ) ) {
 	function av_acf_location( $param, $value, $operator = '==' ) {
-		return compact( $param, $value, $operator );
+		return compact( 'param', 'value', 'operator' );
 	}
 }
 /** Sets field key, label and name */

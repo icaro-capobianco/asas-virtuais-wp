@@ -99,9 +99,19 @@ class AssetsManager {
 		return (object) compact( 'name', 'src', 'deps', 'media' );
 	}
 
+	public function register_style( $name, $src, $deps = [], $media = 'all' ) {
+		$name = $this->prefix . $name;
+		wp_register_style( $name, $src, $deps, $this->version, $media );
+	}
+	public function register_script( $name, $src, $footer = true, $deps = [] ) {
+		$name = $this->prefix . $name;
+		wp_register_script( $name, $src, $deps, $footer, $this->version, $footer );
+	}
+
 	public function localize_script( $handle, $name, $data ) {
 		$this->localize[$handle][] = (object) compact( 'name', 'data' );
 	}
+
 
 	public static function asset_file_url( $name, $dir_path, $extension ) {
 		$min = $name . '.min' . $extension;
