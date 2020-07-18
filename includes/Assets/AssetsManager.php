@@ -60,25 +60,43 @@ class AssetsManager {
 		}
 	}
 	// Public methods for local scripts and styles
-	public function enqueue_local_style( $name, $dir, $deps = [], $media = 'all' ) {
-		$src = self::asset_file_url( $name, $dir, '.css' );
-		$name = $this->prefix . $name;
-		$this->styles[] = (object) compact( 'name', 'src', 'deps', 'media' );
-	}
 	public function enqueue_local_script( $name, $dir, $footer = true, $deps = [] ) {
 		$src = self::asset_file_url( $name, $dir, '.js' );
-		$name = $this->prefix . $name;
-		$this->scripts[] = (object) compact( 'name', 'src', 'footer', 'deps' );
+		$this->scripts[] = (object) compact( 'name', 'src', 'deps', 'footer' );
 	}
 	public function enqueue_local_admin_script( $name, $dir, $footer = true, $deps = [] ) {
 		$src = self::asset_file_url( $name, $dir, '.js' );
-		$name = $this->prefix . $name;
-		$this->admin_scripts[] = (object) compact( 'name', 'src', 'footer', 'deps' );
+		$this->admin_scripts[] = (object) compact( 'name', 'src', 'deps', 'footer' );
+	}
+	public function enqueue_local_style( $name, $dir, $deps = [], $media = 'all' ) {
+		$src = self::asset_file_url( $name, $dir, '.css' );
+		$this->styles[] = $this->compact_style( $name, $src, $deps, $media );
 	}
 	public function enqueue_local_admin_style( $name, $dir, $deps = [], $media = 'all' ) {
 		$src = self::asset_file_url( $name, $dir, '.css' );
+		$this->admin_styles[] = $this->compact_style( $name, $src, $deps, $media );
+	}
+	// Public methods for remote (cdn) scripts and styles
+	public function enqueue_remote_script( $name, $src, $footer = true, $deps = [] ) {
+		$this->scripts[] = (object) compact( 'name', 'src', 'deps', 'footer' );
+	}
+	public function enqueue_remote_admin_script( $name, $src, $footer = true, $deps = [] ) {
+		$this->admin_scripts[] = (object) compact( 'name', 'src', 'deps', 'footer' );
+	}
+	public function enqueue_remote_style( $name, $src, $deps = [], $media = 'all' ) {
+		$this->styles[] = $this->compact_style( $name, $src, $deps, $media );
+	}
+	public function enqueue_remote_admin_style( $name, $src, $deps = [], $media = 'all' ) {
+		$this->admin_styles[] = $this->compact_style( $name, $src, $deps, $media );
+	}
+
+	public function compact_script( $name, $src, $footer = true, $deps = [] ) {
 		$name = $this->prefix . $name;
-		$this->admin_styles[] = (object) compact( 'name', 'src', 'deps', 'media' );
+		return (object) compact( 'name', 'src', 'footer', 'deps' );
+	}
+	public function compact_style( $name, $src, $deps = [], $media = 'all' ) {
+		$name = $this->prefix . $name;
+		return (object) compact( 'name', 'src', 'deps', 'media' );
 	}
 
 	public function localize_script( $handle, $name, $data ) {
