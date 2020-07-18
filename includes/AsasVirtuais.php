@@ -17,19 +17,22 @@ class AsasVirtuais {
 		return self::$instances[$plugin_slug];
     }
 
+	public $plugin_data;
 	public $plugin_version;
 	public $plugin_prefix;
+	public $plugin_slug;
 	public $plugin_name;
 	public $plugin_file;
 	public $plugin_url;
 	public $plugin_dir;
     public function initialize( string $plugin_file, array $args = [] ) {
 
-		$plugin_data = $args['plugin_data'] ?? get_plugin_data( $plugin_file );
+		$plugin_data = $args['plugin_data'] ?? av_get_plugin_data( $plugin_file, false, false );
 		$this->plugin_data = $plugin_data;
-		$this->plugin_name = $plugin_data['Name'] ?? wp_basename( $plugin_file, '.php' );
 		$this->plugin_prefix = $args['prefix'] ?? '';
-		$this->plugin_version = $args['version'] ?? false;
+		$this->plugin_version = $args['version'] ?? $plugin_data['Version'];
+		$this->plugin_slug = wp_basename( $plugin_file, '.php' );
+		$this->plugin_name = $plugin_data['Name'] ?? $this->plugin_slug;
 		$this->plugin_file = $plugin_file;
 		$this->plugin_url = plugin_dir_url( $plugin_file );
 		$this->plugin_dir = plugin_dir_path( $plugin_file );
@@ -70,7 +73,7 @@ class AsasVirtuais {
 		if ( ! isset( $this->update_manager ) ) {
 			$this->update_manager = PuC\UpdateManager::instance();
 		}
-		$this->update_manager->register_plugin( $this->plugin_file, $args );
+		$this->update_manager->register_plugin( $this, $args );
 		return $this->update_manager;
 	}
 	public $rest_manager;
@@ -108,7 +111,7 @@ class AsasVirtuais {
 		foreach ( $plugins as $plugin_dir_file => $plugin_name ) {
 
 			if ( ! is_plugin_active( $plugin_dir_file ) ) {
-				$this->admin_manager()->admin_error( "The plugin $this->plugin_name requires the $plugin_name to be installed and active." );
+				$this->admin_manager()->admin_error( "The plugin $this->plugin_name requires the plugin $plugin_name to be installed and active." );
 				return false;
 			}
 		}

@@ -3,8 +3,17 @@ namespace AsasVirtuaisWP\CPT;
 
 class CPTManager {
 
-	private $custom_post_types = [];
+	public function __construct() {
+		add_action( 'init', [ $this, 'register_custom_post_types' ] );
+	}
 
+	public function register_custom_post_types() {
+		foreach( $this->custom_post_types as $slug => $args ) {
+			register_post_type( $slug, $args );
+		}
+	}
+
+	private $custom_post_types = [];
 	public function register_cpt( $slug, $args = [] ) {
 
 		$args = array_replace( [
@@ -17,7 +26,11 @@ class CPTManager {
 			'rewrite' 	          => false
 		], $args );
 
-		return register_post_type( $slug, $args );
+		if ( did_action( 'init' ) ) {
+			return register_post_type( $slug, $args );
+		}
+
+		$this->custom_post_types[ $slug ] = $args;
 	}
 
 	public function cpt_labels( $slug ) {
