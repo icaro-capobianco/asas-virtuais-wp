@@ -75,8 +75,11 @@ class ACFManager {
 		foreach( $acf_ids as $id ) {
 			$value = get_field( $old_name, $id, false );
 			if ( $value ) {
-				$result = update_field( $new_name, $value, $id );
-				$r[ $id ] = compact( 'value', 'old_name', 'new_name' );
+				$new_field_value = get_field( $new_name, $id, false );
+				if ( ! $new_field_value ) {
+					$result = update_field( $new_name, $value, $id );
+					$r[ $id ] = compact( 'value', 'old_name', 'new_name' );
+				}
 			}
 		}
 		return $r;
