@@ -101,6 +101,13 @@ class AsasVirtuais {
 		}
 		return $this->taxonomy_manager;
 	}
+	private $template_manager;
+	public function template_manager( $args = [] ) {
+		if ( ! isset( $this->template_manager ) ) {
+			$this->template_manager = new Templates\TemplateManager( $args );
+		}
+		return $this->template_manager;
+	}
 
 	/**
 	 * @param mixed $plugins array of plugin index by plugin_dir/plugin_file strings and with the plugin name as value

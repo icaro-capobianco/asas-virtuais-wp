@@ -33,10 +33,23 @@ class TaxonomyManager {
 	}
 
 	public function taxonomy_labels( $slug ) {
+		$last_char = $slug[ strlen( $slug ) - 1 ];
+
 		$name     = str_replace( [ '-', '_' ], ' ', $slug );
 		$ucname   = ucwords( $name );
-		$plural   = $name . 's';
-		$ucplural = $ucname . 's';
+
+		if ( $last_char === 'y' ) {
+
+			$plural = substr_replace( $name, "ies", -1 );
+			$ucplural = substr_replace( $ucname, "ies", -1 );
+
+		} else {
+
+			$plural   = $name . 's';
+			$ucplural = $ucname . 's';
+
+		}
+
 		$taxonomy_labels = [
 			'name'                       => $ucplural,
 			'singular_name'              => $ucname,

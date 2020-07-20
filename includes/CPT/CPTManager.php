@@ -34,6 +34,10 @@ class CPTManager {
 	}
 
 	public function cpt_labels( $slug ) {
+		$last_char = $slug[ strlen( $slug ) - 1 ];
+		if ( $last_char === 'y' ) {
+			$slug = substr_replace( $slug, "ies", -1 );
+		}
 		$name     = str_replace( [ '-', '_' ], ' ', $slug );
 		$ucname   = ucwords( $name );
 		$plural   = $name . 's';
