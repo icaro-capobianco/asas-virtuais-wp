@@ -34,14 +34,23 @@ class CPTManager {
 	}
 
 	public function cpt_labels( $slug ) {
-		$last_char = $slug[ strlen( $slug ) - 1 ];
-		if ( $last_char === 'y' ) {
-			$slug = substr_replace( $slug, "ies", -1 );
-		}
 		$name     = str_replace( [ '-', '_' ], ' ', $slug );
 		$ucname   = ucwords( $name );
-		$plural   = $name . 's';
-		$ucplural = $ucname . 's';
+
+		$last_char = $slug[ strlen( $slug ) - 1 ];
+
+		if ( $last_char === 'y' ) {
+
+			$plural = substr_replace( $name, "ies", -1 );
+			$ucplural = substr_replace( $ucname, "ies", -1 );
+
+		} else {
+
+			$plural   = $name . 's';
+			$ucplural = $ucname . 's';
+
+		}
+
 		return [
 			'name'                       => $ucplural,
 			'singular_name'              => $ucname,
@@ -70,6 +79,14 @@ class CPTManager {
 			'item_scheduled'             => "$ucname scheduled",
 			'item_updated'               => "$ucname updated",
 		];
+	}
+
+	public function update_cpt_name( $old_name, $new_name ) {
+		global $wpdb;
+		if ( post_type_exists( $new_name ) ) {
+			$posts_table = $wpdb->posts;
+			return $wpdb->update( $posts_table, [ 'post_type' => $new_name ], [ 'post_type' => $old_name ] );
+		}
 	}
 
 }

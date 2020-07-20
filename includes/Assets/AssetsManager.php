@@ -30,7 +30,7 @@ class AssetsManager {
 	// Hooks and Internal methods
 	public function enqueue_styles() {
 		foreach( $this->styles as $style ) {
-			$this->enque_style( $style );
+			$this->enqueue_style( $style );
 		}
 	}
 	public function enqueue_scripts() {

@@ -33,10 +33,11 @@ class TaxonomyManager {
 	}
 
 	public function taxonomy_labels( $slug ) {
-		$last_char = $slug[ strlen( $slug ) - 1 ];
 
 		$name     = str_replace( [ '-', '_' ], ' ', $slug );
 		$ucname   = ucwords( $name );
+
+		$last_char = $slug[ strlen( $slug ) - 1 ];
 
 		if ( $last_char === 'y' ) {
 

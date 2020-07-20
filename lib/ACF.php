@@ -424,6 +424,7 @@ if ( ! function_exists( 'av_acf_textarea_field' ) ) {
 if ( ! function_exists( 'av_acf_oembed_field' ) ) {
 	function av_acf_oembed_field( $label, $overwrite ) {
 		$field_data = [
+			'type' => 'oembed',
 			'instructions' => '',
 			'required' => 0,
 			'conditional_logic' => 0,
@@ -435,7 +436,28 @@ if ( ! function_exists( 'av_acf_oembed_field' ) ) {
 			'height' => '',
 			'width' => '',
 		];
-		return av_acf_field( $label, $overwrite );
+		return av_acf_field( $label, $field_data, $overwrite );
+	}
+}
+if ( ! function_exists( 'av_acf_wysiwyg_field' ) ) {
+	function av_acf_wysiwyg_field( $label, $overwrite = [] ) {
+		$field_data = [
+			'type' => 'wysiwyg',
+			'instructions' => '',
+			'required' => 0,
+			'conditional_logic' => 0,
+			'wrapper' => array(
+				'width' => '',
+				'class' => '',
+				'id' => '',
+			),
+			'default_value' => '',
+			'placeholder' => '',
+			'maxlength' => '',
+			'rows' => '',
+			'new_lines' => ''
+		];
+		return av_acf_field( $label, $field_data, $overwrite );
 	}
 }
 /** Use to set the value of the 'wrapper' option */

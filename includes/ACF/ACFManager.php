@@ -58,4 +58,36 @@ class ACFManager {
 		$this->field_groups[] = $group_args;
 	}
 
+	public function update_field_name_via_databe( $old_name, $new_name, $table ) {
+		global $wpdb;
+		$valid_tables = [ 'postmeta', 'commentmeta', 'termmeta', 'usermeta', 'options' ];
+		if ( isset( $wpdb->$table ) || ! in_array( $table, $valid_tables ) ) {
+			$table_name = $wpdb->$table;
+			$key = strpos( $table_name, 'meta' ) !== false ? 'meta_key' : 'option_name';
+			return $wpdb->update( $table_name, [ $key => $new_name ], [ $key => $old_name ] );
+		} else {
+			throw new \Exception("Invalid table $table");
+		}
+	}
+
+	public function update_field_name_via_duplicate( $old_name, $new_name, $acf_ids ) {
+		$r = [];
+		foreach( $acf_ids as $id ) {
+			$value = get_field( $old_name, $id, false );
+			if ( $value ) {
+				$result = update_field( $new_name, $value, $id );
+				$r[ $id ] = compact( 'value', 'old_name', 'new_name' );
+			}
+		}
+		return $r;
+	}
+
+	public function update_field_names_dictionary_duplicate( $name_dictionary, $acf_ids ) {
+		$r = [];
+		foreach( $name_dictionary as $old_name => $new_name ) {
+			$r[] = $this->update_field_name_via_duplicate( $old_name, $new_name, $acf_ids );
+		}
+		return $r;
+	}
+
 }
