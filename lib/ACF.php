@@ -504,8 +504,28 @@ if ( ! function_exists( 'av_acf_option_field_condition' ) ) {
 		return $conditions;
 	}
 }
-
-
+/** */
+if ( ! function_exists( 'av_acf_page_link_field' ) ) {
+	function av_acf_page_link_field( $label, $overwrite = [] ) {
+		$field_data = [
+			'type' => 'page_link',
+			'instructions' => '',
+			'required' => 0,
+			'conditional_logic' => 0,
+			'wrapper' => array(
+				'width' => '',
+				'class' => '',
+				'id' => '',
+			),
+			'post_type' => '',
+			'taxonomy' => '',
+			'allow_null' => 0,
+			'allow_archives' => 1,
+			'multiple' => 0,
+		];
+		return av_acf_field( $label, $field_data, $overwrite );
+	}
+}
 
 
 
