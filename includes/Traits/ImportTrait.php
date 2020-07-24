@@ -79,6 +79,9 @@ trait ImportTrait {
 			if( isset( $data['terms'] ) && is_array( $data['terms'] ) ) {
 				$static->import_taxonomies( $data['terms'] );
 			}
+			if ( isset( $data['post_thumbnail'] ) ) {
+				$static->import_thumbnail_from_url( $data['post_thumbnail'] );
+			}
 
 			return $static;
 		}
@@ -166,6 +169,24 @@ trait ImportTrait {
 			$result = av_array_keys_exist_recursive( $data, static::essential_import_args() );
 			if ( ! $result ) {
 				throw new \Exception( "Missing or empty essential import $arg in import: \n" . var_export( $data, true ) );
+			}
+		}
+
+		public function import_thumbnail_from_url( string $url ) {
+			try {
+				if ( $url ) {
+					$attach_id = av_insert_attachment_from_url( $url );
+					if ( $attach_id ) {
+						$result = set_post_thumbnail( $this->get_id(), $attach_id );
+						if ( $result ) {
+							av_import_admin_notice( "Set the featured image $attach_id to the post " . $this->get_id() );
+						} else {
+							av_import_admin_error( "Failed to set the featured image $attach_id to the post " . $this->get_id() );
+						}
+					}
+				}
+			} catch (\Throwable $th) {
+				av_import_admin_exception( "Failed to set the featured image from the url $url to the post " . $this->get_id() );
 			}
 		}
 

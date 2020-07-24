@@ -52,12 +52,8 @@ if ( ! function_exists( 'av_acf_field_group' ) ) {
  * @param string $type ( options_page | post_type | category )
  */
 if ( ! function_exists( 'av_acf_location' ) ) {
-	function av_acf_location( $type, $value ) {
-		return [
-			'param'    => $type,
-			'operator' => '==',
-			'value'    => $value,
-		];
+	function av_acf_location( $param, $value, $operator = '==' ) {
+		return compact( 'param', 'value', 'operator' );
 	}
 }
 /** Sets field key, label and name */
@@ -116,6 +112,27 @@ if ( ! function_exists( 'av_acf_text_field' ) ) {
 			'prepend'           => '',
 			'append'            => '',
 			'maxlength'         => '',
+		];
+		return av_acf_field( $label, $field_data, $overwrite );
+	}
+}
+if ( ! function_exists( 'av_acf_number_field' ) ) {
+	function av_acf_number_field( $label, $overwrite = [] ) {
+		$field_data = [
+			'type' => 'number',
+			'instructions' => '',
+			'required' => 0,
+			'conditional_logic' => 0,
+			'wrapper' => array(
+				'width' => '',
+				'class' => '',
+				'id' => '',
+			),
+			'default_value' => 0,
+			'placeholder' => '',
+			'prepend' => '',
+			'append' => '',
+			'maxlength' => '',
 		];
 		return av_acf_field( $label, $field_data, $overwrite );
 	}
@@ -404,6 +421,45 @@ if ( ! function_exists( 'av_acf_textarea_field' ) ) {
 		return av_acf_field( $label, $field_data, $overwrite );
 	}
 }
+if ( ! function_exists( 'av_acf_oembed_field' ) ) {
+	function av_acf_oembed_field( $label, $overwrite ) {
+		$field_data = [
+			'type' => 'oembed',
+			'instructions' => '',
+			'required' => 0,
+			'conditional_logic' => 0,
+			'wrapper' => array(
+				'width' => '',
+				'class' => '',
+				'id' => '',
+			),
+			'height' => '',
+			'width' => '',
+		];
+		return av_acf_field( $label, $field_data, $overwrite );
+	}
+}
+if ( ! function_exists( 'av_acf_wysiwyg_field' ) ) {
+	function av_acf_wysiwyg_field( $label, $overwrite = [] ) {
+		$field_data = [
+			'type' => 'wysiwyg',
+			'instructions' => '',
+			'required' => 0,
+			'conditional_logic' => 0,
+			'wrapper' => array(
+				'width' => '',
+				'class' => '',
+				'id' => '',
+			),
+			'default_value' => '',
+			'placeholder' => '',
+			'maxlength' => '',
+			'rows' => '',
+			'new_lines' => ''
+		];
+		return av_acf_field( $label, $field_data, $overwrite );
+	}
+}
 /** Use to set the value of the 'wrapper' option */
 if ( ! function_exists( 'av_acf_field_wrapper' ) ) {
 	function av_acf_field_wrapper( $width = '', $class = '', $id = '' ) {
@@ -448,8 +504,28 @@ if ( ! function_exists( 'av_acf_option_field_condition' ) ) {
 		return $conditions;
 	}
 }
-
-
+/** */
+if ( ! function_exists( 'av_acf_page_link_field' ) ) {
+	function av_acf_page_link_field( $label, $overwrite = [] ) {
+		$field_data = [
+			'type' => 'page_link',
+			'instructions' => '',
+			'required' => 0,
+			'conditional_logic' => 0,
+			'wrapper' => array(
+				'width' => '',
+				'class' => '',
+				'id' => '',
+			),
+			'post_type' => '',
+			'taxonomy' => '',
+			'allow_null' => 0,
+			'allow_archives' => 1,
+			'multiple' => 0,
+		];
+		return av_acf_field( $label, $field_data, $overwrite );
+	}
+}
 
 
 

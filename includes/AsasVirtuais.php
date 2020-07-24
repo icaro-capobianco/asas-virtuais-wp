@@ -27,7 +27,7 @@ class AsasVirtuais {
 	public $plugin_dir;
     public function initialize( string $plugin_file, array $args = [] ) {
 
-		$plugin_data = $args['plugin_data'] ?? get_plugin_data( $plugin_file );
+		$plugin_data = $args['plugin_data'] ?? av_get_plugin_data( $plugin_file, false, false );
 		$this->plugin_data = $plugin_data;
 		$this->plugin_prefix = $args['prefix'] ?? '';
 		$this->plugin_version = $args['version'] ?? $plugin_data['Version'];
@@ -73,7 +73,7 @@ class AsasVirtuais {
 		if ( ! isset( $this->update_manager ) ) {
 			$this->update_manager = PuC\UpdateManager::instance();
 		}
-		$this->update_manager->register_plugin( $framework_instance, $args );
+		$this->update_manager->register_plugin( $this, $args );
 		return $this->update_manager;
 	}
 	public $rest_manager;
@@ -101,6 +101,13 @@ class AsasVirtuais {
 		}
 		return $this->taxonomy_manager;
 	}
+	private $template_manager;
+	public function template_manager( $args = [] ) {
+		if ( ! isset( $this->template_manager ) ) {
+			$this->template_manager = new Templates\TemplateManager( $args );
+		}
+		return $this->template_manager;
+	}
 
 	/**
 	 * @param mixed $plugins array of plugin index by plugin_dir/plugin_file strings and with the plugin name as value
@@ -111,7 +118,7 @@ class AsasVirtuais {
 		foreach ( $plugins as $plugin_dir_file => $plugin_name ) {
 
 			if ( ! is_plugin_active( $plugin_dir_file ) ) {
-				$this->admin_manager()->admin_error( "The plugin $this->plugin_name requires the $plugin_name to be installed and active." );
+				$this->admin_manager()->admin_error( "The plugin $this->plugin_name requires the plugin $plugin_name to be installed and active." );
 				return false;
 			}
 		}
