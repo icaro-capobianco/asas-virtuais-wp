@@ -6,16 +6,33 @@ class AssetsManager {
 
 	public $prefix;
 	public $version;
+
+	public $js_dir;
+	public $css_dir;
+	public $assets_dir;
+
 	public $styles = [];
 	public $scripts = [];
 	public $localize = [];
 	public $admin_styles = [];
 	public $admin_scripts = [];
+
+	// Deprecated
 	public $plugin_assets_dir;
 
 	public function __construct( $args = [] ) {
 		$this->prefix  = $args['prefix'] ?? '';
 		$this->version = $args['version'] ?? '';
+
+		if ( isset( $args['js_dir'] ) ) {
+			$this->js_dir = $args['js_dir'];
+		}
+		if ( isset( $args['css_dir'] ) ) {
+			$this->css_dir = $args['css_dir'];
+		}
+		if ( isset( $args['assets_dir'] ) ) {
+			$this->assets_dir = $args['assets_dir'];
+		}
 
 		add_action( 'wp_enqueue_scripts', [$this, 'enqueue_scripts'] );
 		add_action( 'wp_enqueue_scripts', [$this, 'enqueue_styles'] );
@@ -23,6 +40,7 @@ class AssetsManager {
 		add_action( 'admin_enqueue_scripts', [$this, 'enqueue_admin_styles'] );
 	}
 
+	// Deprecated
 	public function assets_dir() {
 		return $this->plugin_assets_dir;
 	}
@@ -99,13 +117,23 @@ class AssetsManager {
 		return (object) compact( 'name', 'src', 'deps', 'media' );
 	}
 
-	public function register_style( $name, $src, $deps = [], $media = 'all' ) {
+	public function register_style( $name, $src = false, $deps = [], $media = 'all' ) {
 		$name = $this->prefix . $name;
-		wp_register_style( $name, $src, $deps, $this->version, $media );
+		if ( ! $src && $this->css_dir ) {
+			$src = static::asset_file_url( $name, $this->css_dir, 'css' );
+		}
+		if ( $src ) {
+			wp_register_style( $name, $src, $deps, $this->version, $media );
+		}
 	}
-	public function register_script( $name, $src, $footer = true, $deps = [] ) {
+	public function register_script( $name, $src = false, $footer = true, $deps = [] ) {
 		$name = $this->prefix . $name;
-		wp_register_script( $name, $src, $deps, $footer, $this->version, $footer );
+		if ( ! $src && $this->js_dir ) {
+			$src = static::asset_file_url( $name, $this->js_dir, 'js' );
+		}
+		if ( $src ) {
+			wp_register_script( $name, $src, $deps, $footer, $this->version, $footer );
+		}
 	}
 
 	public function localize_script( $handle, $name, $data ) {
