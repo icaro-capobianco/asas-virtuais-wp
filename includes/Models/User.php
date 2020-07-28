@@ -9,8 +9,12 @@ class User {
 
 	protected $wp_user;
 
-	public function __construct( \WP_User $wp_user ) {
-		$this->wp_user = $wp_user;
+	public function __construct( $wp_user = false ) {
+		if ( ! $wp_user ) {
+			$this->wp_user = wp_get_current_user();
+		} else {
+			$this->wp_user = $wp_user;
+		}
 	}
 
 	public function get_id() {
@@ -18,6 +22,13 @@ class User {
 	}
 	public function get_acf_id() {
 		return 'user_' . $this->get_id();
+	}
+
+	public function is_admin() {
+		if ( ! isset( $this->id_admin ) ) {
+			$this->is_admin = user_can( $this->get_id(), 'administrator' );
+		}
+		return $this->is_admin;
 	}
 
 	public static function essential_import_args() {

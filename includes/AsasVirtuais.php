@@ -109,6 +109,14 @@ class AsasVirtuais {
 		return $this->template_manager;
 	}
 
+	private $current_user;
+	public function user() {
+		if ( ! isset( $this->current_user ) ) {
+			return new Models\User;
+		}
+		return $this->current_user;
+	}
+
 	/**
 	 * @param mixed $plugins array of plugin index by plugin_dir/plugin_file strings and with the plugin name as value
 	 * @return bool
