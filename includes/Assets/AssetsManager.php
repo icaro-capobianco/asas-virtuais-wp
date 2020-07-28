@@ -120,7 +120,7 @@ class AssetsManager {
 	public function register_style( $name, $src = false, $deps = [], $media = 'all' ) {
 		$name = $this->prefix . $name;
 		if ( ! $src && $this->css_dir ) {
-			$src = static::asset_file_url( $name, $this->css_dir, 'css' );
+			$src = static::asset_file_url( $name, $this->css_dir, '.css' );
 		}
 		if ( $src ) {
 			wp_register_style( $name, $src, $deps, $this->version, $media );
@@ -129,7 +129,7 @@ class AssetsManager {
 	public function register_script( $name, $src = false, $footer = true, $deps = [] ) {
 		$name = $this->prefix . $name;
 		if ( ! $src && $this->js_dir ) {
-			$src = static::asset_file_url( $name, $this->js_dir, 'js' );
+			$src = static::asset_file_url( $name, $this->js_dir, '.js' );
 		}
 		if ( $src ) {
 			wp_register_script( $name, $src, $deps, $footer, $this->version, $footer );
