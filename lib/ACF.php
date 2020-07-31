@@ -19,6 +19,7 @@ if ( ! function_exists( 'av_acf_field_name' ) ) {
 }
 if ( ! function_exists( 'av_acf_field_group' ) ) {
 	function av_acf_field_group( $label, $locations = [], $fields = [], $args = [] ) {
+
 		$prefix = false;
 		if ( isset( $args['prefix'] ) ) {
 			$prefix = $args['prefix'];
@@ -26,12 +27,14 @@ if ( ! function_exists( 'av_acf_field_group' ) ) {
 		}
 
 		$slug  = av_sanitize_title_with_underscores( $label );
+
 		if( $prefix ) {
 			$slug = $prefix . '_' . $slug;
 		}
 		$key   = AV_ACF_KEY_PREFIX . $slug;
 		$title = $label;
 		$defaults = [
+			'ID'                    => $key,
 			'key'                   => $key,
 			'title'                 => $title,
 			'fields'                => $fields,
@@ -312,7 +315,7 @@ if ( ! function_exists( 'av_acf_textarea_field' ) ) {
 	}
 }
 if ( ! function_exists( 'av_acf_oembed_field' ) ) {
-	function av_acf_oembed_field( $label, $overwrite ) {
+	function av_acf_oembed_field( $label, $overwrite = [] ) {
 		$field_data = [
 			'type' => 'oembed',
 			'height' => '',
