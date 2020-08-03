@@ -108,6 +108,13 @@ class AsasVirtuais {
 		}
 		return $this->template_manager;
 	}
+	private $hook_manager;
+	public function hook_manager() {
+		if ( ! isset( $this->hook_manager ) ) {
+			$this->hook_manager = new Hooks\HookManager();
+		}
+		return $this->hook_manager;
+	}
 
 	private $current_user;
 	public function user() {

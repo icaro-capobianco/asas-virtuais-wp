@@ -8,14 +8,14 @@ class HookManager {
 	}
 
 	public function add_action( $name, $callback, $priority = 10, $variables = 1 ) {
-		add_action( $name, $this->make_callback( $callback ), $priority, $variables );
+		add_action( $name, $this->make_callback( $callback, $variables ), $priority, $variables );
 	}
 
 	public function add_filter( $name, $callback, $priority = 10, $variables = 1 ) {
 		add_filter( $name, $this->make_callback( $callback, $variables ), $priority, $variables );
 	}
 
-	public function make_callback( $callback ) {
+	public function make_callback( $callback, $variables ) {
 		return function() use( $callback, $variables ) {
 			try {
 				$args = func_get_args();

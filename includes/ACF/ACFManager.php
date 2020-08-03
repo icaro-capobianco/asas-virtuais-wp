@@ -11,6 +11,17 @@ class ACFManager {
 		}
 	}
 
+	public function add_meta_box( $title, $page_slug, $callback, $context = 'normal', $priority = 'default' ) {
+		$metabox_slug = sanitize_title( $title );
+
+		add_action( 'acf/input/admin_head', function() use ( $page_slug, $metabox_slug, $title, $callback, $context, $priority ) {
+			$screen = get_current_screen();
+			if ( $screen->id === $page_slug ) {
+				add_meta_box( $metabox_slug, $title, $callback, 'acf_options_page', $context, $priority );
+			}
+		}, 20 );
+  	}
+
 	public function acf_initialized() {
 		foreach( $this->pages as $page_options ) {
 			acf_add_options_page( $page_options );
