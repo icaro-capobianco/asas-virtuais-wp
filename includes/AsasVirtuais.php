@@ -101,6 +101,35 @@ class AsasVirtuais {
 		}
 		return $this->taxonomy_manager;
 	}
+	private $template_manager;
+	public function template_manager( $args = [] ) {
+		if ( ! isset( $this->template_manager ) ) {
+			$this->template_manager = new Templates\TemplateManager( $args );
+		}
+		return $this->template_manager;
+	}
+	private $hook_manager;
+	public function hook_manager() {
+		if ( ! isset( $this->hook_manager ) ) {
+			$this->hook_manager = new Hooks\HookManager();
+		}
+		return $this->hook_manager;
+	}
+	private $meta_manager;
+	public function meta_manager() {
+		if ( ! isset( $this->meta_manager ) ) {
+			$this->meta_manager = new Meta\MetaManager();
+		}
+		return $this->meta_manager;
+	}
+
+	private $current_user;
+	public function user() {
+		if ( ! isset( $this->current_user ) ) {
+			return new Models\User;
+		}
+		return $this->current_user;
+	}
 
 	/**
 	 * @param mixed $plugins array of plugin index by plugin_dir/plugin_file strings and with the plugin name as value

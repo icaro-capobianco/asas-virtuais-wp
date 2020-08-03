@@ -19,6 +19,7 @@ if ( ! function_exists( 'av_acf_field_name' ) ) {
 }
 if ( ! function_exists( 'av_acf_field_group' ) ) {
 	function av_acf_field_group( $label, $locations = [], $fields = [], $args = [] ) {
+
 		$prefix = false;
 		if ( isset( $args['prefix'] ) ) {
 			$prefix = $args['prefix'];
@@ -26,12 +27,14 @@ if ( ! function_exists( 'av_acf_field_group' ) ) {
 		}
 
 		$slug  = av_sanitize_title_with_underscores( $label );
+
 		if( $prefix ) {
 			$slug = $prefix . '_' . $slug;
 		}
 		$key   = AV_ACF_KEY_PREFIX . $slug;
 		$title = $label;
 		$defaults = [
+			'ID'                    => $key,
 			'key'                   => $key,
 			'title'                 => $title,
 			'fields'                => $fields,
@@ -52,17 +55,23 @@ if ( ! function_exists( 'av_acf_field_group' ) ) {
  * @param string $type ( options_page | post_type | category )
  */
 if ( ! function_exists( 'av_acf_location' ) ) {
-	function av_acf_location( $type, $value ) {
-		return [
-			'param'    => $type,
-			'operator' => '==',
-			'value'    => $value,
-		];
+	function av_acf_location( $param, $value, $operator = '==' ) {
+		return compact( 'param', 'value', 'operator' );
 	}
 }
 /** Sets field key, label and name */
 if ( ! function_exists( 'av_acf_field' ) ) {
 	function av_acf_field( $label, $data, $overwrite = [] ) {
+		$other_defaults = [
+			'wrapper' => [
+				'width' => '',
+				'class' => '',
+				'id'    => '',
+			],
+			'instructions'      => '',
+			'required'          => 0,
+			'conditional_logic' => 0,
+		];
 		$slug = av_sanitize_title_with_underscores( $label );
 		if ( isset( $overwrite['prefix'] ) ) {
 			$slug = $overwrite['prefix'] . '_' . $slug;
@@ -71,7 +80,7 @@ if ( ! function_exists( 'av_acf_field' ) ) {
 		$key            = AV_ACF_KEY_PREFIX . $slug;
 		$name           = AV_ACF_FIELD_PREFIX . $slug;
 		$key_label_name = compact( 'key', 'label', 'name' );
-		return array_replace( array_merge( $key_label_name, $data ), $overwrite );
+		return array_replace( $other_defaults, array_merge( $key_label_name, $data ), $overwrite );
 	}
 }
 /** Tab field defaults
@@ -84,14 +93,6 @@ if ( ! function_exists( 'av_acf_tab_field' ) ) {
 	function av_acf_tab_field( $label, $overwrite = [] ) {
 		$field_data = [
 			'type'              => 'tab',
-			'instructions'      => '',
-			'required'          => 0,
-			'conditional_logic' => 0,
-			'wrapper'           => [
-				'width' => '',
-				'class' => '',
-				'id'    => '',
-			],
 			'placement'         => 'left',
 			'endpoint'          => 0,
 		];
@@ -103,19 +104,24 @@ if ( ! function_exists( 'av_acf_text_field' ) ) {
 	function av_acf_text_field( $label, $overwrite = [] ) {
 		$field_data = [
 			'type'              => 'text',
-			'instructions'      => '',
-			'required'          => 0,
-			'conditional_logic' => 0,
-			'wrapper'           => [
-				'width' => '',
-				'class' => '',
-				'id'    => '',
-			],
 			'default_value'     => '',
 			'placeholder'       => '',
 			'prepend'           => '',
 			'append'            => '',
 			'maxlength'         => '',
+		];
+		return av_acf_field( $label, $field_data, $overwrite );
+	}
+}
+if ( ! function_exists( 'av_acf_number_field' ) ) {
+	function av_acf_number_field( $label, $overwrite = [] ) {
+		$field_data = [
+			'type' => 'number',
+			'default_value' => 0,
+			'placeholder' => '',
+			'prepend' => '',
+			'append' => '',
+			'maxlength' => '',
 		];
 		return av_acf_field( $label, $field_data, $overwrite );
 	}
@@ -126,14 +132,6 @@ if ( ! function_exists( 'av_acf_repeater_field' ) ) {
 		$button_label                 = substr( $label, -1 ) === 's' ? substr( $label, 0, -1 ) : $label;
 		$field_data                   = [
 			'type'              => 'repeater',
-			'instructions'      => '',
-			'required'          => 0,
-			'conditional_logic' => 0,
-			'wrapper'           => [
-				'width' => '',
-				'class' => '',
-				'id'    => '',
-			],
 			'collapsed'         => '',
 			'min'               => 0,
 			'max'               => 0,
@@ -157,14 +155,6 @@ if ( ! function_exists( 'av_acf_post_field' ) ) {
 	function av_acf_post_field( $label, $post_type, $overwrite = [] ) {
 		$field_data = [
 			'type'              => 'post_object',
-			'instructions'      => '',
-			'required'          => 0,
-			'conditional_logic' => 0,
-			'wrapper'           => [
-				'width' => '',
-				'class' => '',
-				'id'    => '',
-			],
 			'post_type'         => $post_type,
 			'taxonomy'          => '',
 			'allow_null'        => 0,
@@ -180,14 +170,6 @@ if ( ! function_exists( 'av_acf_image_field' ) ) {
 	function av_acf_image_field( $label, $overwrite = [] ) {
 		$field_data = [
 			'type'              => 'image',
-			'instructions'      => '',
-			'required'          => 0,
-			'conditional_logic' => 0,
-			'wrapper'           => [
-				'width' => '',
-				'class' => '',
-				'id'    => '',
-			],
 			'return_format'     => 'array',
 			'preview_size'      => 'medium',
 			'library'           => 'all',
@@ -207,14 +189,6 @@ if ( ! function_exists( 'av_acf_boolean_field' ) ) {
 	function av_acf_boolean_field( $label, $overwrite = [] ) {
 		$field_data = [
 			'type'              => 'true_false',
-			'instructions'      => '',
-			'required'          => 0,
-			'conditional_logic' => 0,
-			'wrapper'           => [
-				'width' => '',
-				'class' => '',
-				'id'    => '',
-			],
 			'message'           => '',
 			'default_value'     => 0,
 			'ui'                => 1,
@@ -229,14 +203,6 @@ if ( ! function_exists( 'av_acf_select_field' ) ) {
 	function av_acf_select_field( $label, $options, $overwrite = [] ) {
 		$field_data = [
 			'type'              => 'select',
-			'instructions'      => '',
-			'required'          => 0,
-			'conditional_logic' => 0,
-			'wrapper'           => [
-				'width' => '',
-				'class' => '',
-				'id'    => '',
-			],
 			'choices'           => $options,
 			'default_value'     => [],
 			'allow_null'        => 0,
@@ -254,14 +220,6 @@ if ( ! function_exists( 'av_acf_post_relationship_field' ) ) {
 	function av_acf_post_relationship_field( $label, $post_type, $overwrite = [] ) {
 		$field_data = [
 			'type'              => 'relationship',
-			'instructions'      => '',
-			'required'          => 0,
-			'conditional_logic' => 0,
-			'wrapper'           => [
-				'width' => '',
-				'class' => '',
-				'id'    => '',
-			],
 			'post_type'         => $post_type,
 			'taxonomy'          => '',
 			'filters'           => [ 'search', 'post_type', 'taxonomy' ],
@@ -280,14 +238,6 @@ if ( ! function_exists( 'av_acf_accordion_field' ) ) {
 	function av_acf_accordion_field( $label, $overwrite = [] ) {
 		$field_data = [
 			'type'              => 'accordion',
-			'instructions'      => '',
-			'required'          => 0,
-			'conditional_logic' => 0,
-			'wrapper'           => [
-				'width' => '',
-				'class' => '',
-				'id'    => '',
-			],
 			'open'              => 0,
 			'multi_expand'      => 0,
 			'endpoint'          => 0,
@@ -300,14 +250,6 @@ if ( ! function_exists( 'av_button_group_field' ) ) {
 	function av_acf_button_group_field( $label, $choices, $overwrite = [] ) {
 		$field_data = [
 			'type'              => 'button_group',
-			'instructions'      => '',
-			'required'          => 0,
-			'conditional_logic' => 0,
-			'wrapper'           => [
-				'width' => '',
-				'class' => '',
-				'id'    => '',
-			],
 			'choices'           => $choices,
 			'allow_null'        => 0,
 			'default_value'     => '',
@@ -322,14 +264,6 @@ if ( ! function_exists( 'av_acf_color_field' ) ) {
 	function av_acf_color_field( $label, $overwrite = [] ) {
 		$field_data = [
 			'type'              => 'color_picker',
-			'instructions'      => '',
-			'required'          => 0,
-			'conditional_logic' => 0,
-			'wrapper'           => [
-				'width' => '',
-				'class' => '',
-				'id'    => '',
-			],
 			'default_value'     => '',
 		];
 		return av_acf_field( $label, $field_data, $overwrite );
@@ -339,14 +273,6 @@ if ( ! function_exists( 'av_acf_gallery_field' ) ) {
 	function av_acf_gallery_field( $label, $overwrite = [] ) {
 		$field_data = [
 			'type'              => 'gallery',
-			'instructions'      => '',
-			'required'          => 0,
-			'conditional_logic' => 0,
-			'wrapper'           => [
-				'width' => '',
-				'class' => '',
-				'id'    => '',
-			],
 			'return_format'     => 'array',
 			'preview_size'      => 'medium',
 			'insert'            => 'append',
@@ -368,14 +294,6 @@ if ( ! function_exists( 'av_acf_date_field' ) ) {
 	function av_acf_date_field( $label, $overwrite = [] ) {
 		$field_data = [
 			'type'              => 'date_picker',
-			'instructions'      => '',
-			'required'          => 0,
-			'conditional_logic' => 0,
-			'wrapper'           => [
-				'width' => '',
-				'class' => '',
-				'id'    => '',
-			],
 			'display_format'    => 'F j, Y',
 			'return_format'     => 'F j, Y',
 			'first_day'         => 1,
@@ -387,19 +305,34 @@ if ( ! function_exists( 'av_acf_textarea_field' ) ) {
 	function av_acf_textarea_field( $label, $overwrite = [] ) {
 		$field_data = [
 			'type'              => 'textarea',
-			'instructions'      => '',
-			'required'          => 0,
-			'conditional_logic' => 0,
-			'wrapper'           => [
-				'width' => '',
-				'class' => '',
-				'id'    => '',
-			],
 			'default_value'     => '',
 			'placeholder'       => '',
 			'maxlength'         => '',
 			'rows'              => '',
 			'new_lines'         => '',
+		];
+		return av_acf_field( $label, $field_data, $overwrite );
+	}
+}
+if ( ! function_exists( 'av_acf_oembed_field' ) ) {
+	function av_acf_oembed_field( $label, $overwrite = [] ) {
+		$field_data = [
+			'type' => 'oembed',
+			'height' => '',
+			'width' => '',
+		];
+		return av_acf_field( $label, $field_data, $overwrite );
+	}
+}
+if ( ! function_exists( 'av_acf_wysiwyg_field' ) ) {
+	function av_acf_wysiwyg_field( $label, $overwrite = [] ) {
+		$field_data = [
+			'type' => 'wysiwyg',
+			'default_value' => '',
+			'placeholder' => '',
+			'maxlength' => '',
+			'rows' => '',
+			'new_lines' => ''
 		];
 		return av_acf_field( $label, $field_data, $overwrite );
 	}
@@ -448,11 +381,50 @@ if ( ! function_exists( 'av_acf_option_field_condition' ) ) {
 		return $conditions;
 	}
 }
+/** */
+if ( ! function_exists( 'av_acf_page_link_field' ) ) {
+	function av_acf_page_link_field( $label, $overwrite = [] ) {
+		$field_data = [
+			'type' => 'page_link',
+			'post_type' => '',
+			'taxonomy' => '',
+			'allow_null' => 0,
+			'allow_archives' => 1,
+			'multiple' => 0,
+		];
+		return av_acf_field( $label, $field_data, $overwrite );
+	}
+}
 
+if ( ! function_exists( 'av_acf_location_field' ) ) {
+	function av_acf_location_field( $label, $overwrite = [] ) {
+		$field_data = [
+			'type' => 'google_map',
+			'center_lat' => '',
+			'center_lng' => '',
+			'zoom' => '',
+			'height' => '',
+		];
+		return av_acf_field( $label, $field_data, $overwrite );
+	}
+}
 
-
-
-
+if ( ! function_exists( 'av_acf_taxonomy_field' ) ) {
+	function av_acf_taxonomy_field( $label, $taxonomy, $overwrite = [] ) {
+		$field_data = [
+			'type' => 'taxonomy',
+			'taxonomy' => $taxonomy,
+			'field_type' => 'multi_select',
+			'allow_null' => 0,
+			'add_term' => 0,
+			'save_terms' => 0,
+			'load_terms' => 0,
+			'return_format' => 'id',
+			'multiple' => 0,
+		];
+		return av_acf_field( $label, $field_data, $overwrite );
+	}
+}
 
 
 
