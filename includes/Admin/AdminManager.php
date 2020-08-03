@@ -9,7 +9,7 @@ class AdminManager {
 	public function __construct() {
 
 		add_action( 'admin_notices', [ $this, 'display_admin_notices' ] );
-		if ( current_user_can( 'administrator' ) ) {
+		if ( current_user_can( 'administrator' ) && ! is_admin() ) {
 			add_action( 'wp_head', [ $this, 'display_admin_notices' ] );
 		}
 
