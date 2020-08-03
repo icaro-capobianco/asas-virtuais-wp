@@ -115,6 +115,13 @@ class AsasVirtuais {
 		}
 		return $this->hook_manager;
 	}
+	private $meta_manager;
+	public function meta_manager() {
+		if ( ! isset( $this->meta_manager ) ) {
+			$this->meta_manager = new Meta\MetaManager();
+		}
+		return $this->meta_manager;
+	}
 
 	private $current_user;
 	public function user() {
