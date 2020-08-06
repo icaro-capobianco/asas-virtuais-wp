@@ -49,7 +49,7 @@ class UpdateManager {
 			try {
 				$plugin_file = $framework_instance->plugin_file;
 				$plugin_name = $framework_instance->plugin_name;
-				$plugin_slug = wp_basename( $plugin_file, '.php' );
+				$plugin_slug = $framework_instance->plugin_slug;
 
 				$puc_path = $args['puc_path'] ?? false;
 				$meta_url = $args['meta_url'] ?? false;

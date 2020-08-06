@@ -15,7 +15,7 @@ class ACFManager {
 
 			add_action( 'init', function() use ( $framework ) {
 				if ( ! did_action( 'acf/init' ) && $framework ) {
-					$framework->admin_manager( 'ACF is required for the plugin ' . $framework->plugin_name . ' to work properly' );
+					$framework->admin_manager()->admin_error( 'ACF is required for the plugin ' . $framework->plugin_name . ' to work' );
 				}
 			} );
 
