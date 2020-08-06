@@ -61,7 +61,7 @@ class UpdateManager {
 				if ( $meta_url && $plugin_slug ) {
 					if ( $pre_release_url ) {
 						$this->pre_release_plugins[$plugin_slug] = $plugin_name;
-						if ( get_field( av_sanitize_title_with_underscores($plugin_slug)."_pre_release", 'option' ) ) {
+						if ( av_acf_get_field( av_sanitize_title_with_underscores($plugin_slug)."_pre_release", 'option' ) ) {
 							return $this->build_update_checker( $pre_release_url, $plugin_file, $plugin_name );
 						}
 					}
