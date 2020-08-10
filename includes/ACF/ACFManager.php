@@ -151,11 +151,12 @@ class ACFManager {
 					}
 				}
 			}
-			if ( $value === null && $fallback !== null ) {
-				return $fallback;
-			} else {
-				return $value;
-			}
+
+		}
+		if ( $value === null && $fallback !== null ) {
+			return $fallback;
+		} else {
+			return $value;
 		}
 	}
 
