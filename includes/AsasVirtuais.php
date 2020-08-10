@@ -57,7 +57,7 @@ class AsasVirtuais {
 	private $acf_manager;
 	public function acf_manager() {
 		if ( ! isset( $this->acf_manager ) ) {
-			$this->acf_manager = new ACF\ACFManager();
+			$this->acf_manager = new ACF\ACFManager( $this );
 		}
 		return $this->acf_manager;
 	}
@@ -114,6 +114,13 @@ class AsasVirtuais {
 			$this->hook_manager = new Hooks\HookManager();
 		}
 		return $this->hook_manager;
+	}
+	private $meta_manager;
+	public function meta_manager() {
+		if ( ! isset( $this->meta_manager ) ) {
+			$this->meta_manager = new Meta\MetaManager();
+		}
+		return $this->meta_manager;
 	}
 
 	private $current_user;
