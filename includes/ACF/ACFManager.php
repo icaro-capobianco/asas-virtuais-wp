@@ -11,18 +11,14 @@ class ACFManager {
 		$this->framework = $framework;
 		$this->acf_loaded = class_exists( 'ACF' );
 
-		if ( ! did_action( 'acf/init' ) ) {
-
-			add_action( 'init', function() use ( $framework ) {
-				if ( ! did_action( 'acf/init' ) && $framework ) {
-					$framework->admin_manager()->admin_error( 'ACF is required for the plugin ' . $framework->plugin_name . ' to work' );
-				}
-			} );
-
-			add_action( 'acf/init', [ $this, 'acf_initialized' ], 30, 1 );
-		} else {
-			$this->acf_initialized();
-		}
+		add_action( 'init', function() use( $framework ) {
+			$this->acf_loaded = class_exists( 'ACF' );
+			if ( $this->acf_loaded ) {
+				$this->acf_initialized();
+			} elseif ( $framework ) {
+				$framework->admin_manager()->admin_error( 'ACF is required for the plugin ' . $framework->plugin_name . ' to work' );
+			}
+		}, 99 );
 
 	}
 
