@@ -11,8 +11,11 @@ class ACFManager {
 		$this->framework = $framework;
 		$this->acf_loaded = class_exists( 'ACF' );
 
+		add_action( 'acf/init', function() {
+			$this->acf_loaded = true;
+		} );
+
 		add_action( 'init', function() use( $framework ) {
-			$this->acf_loaded = class_exists( 'ACF' );
 			if ( $this->acf_loaded ) {
 				$this->acf_initialized();
 			} elseif ( $framework ) {
