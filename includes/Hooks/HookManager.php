@@ -16,13 +16,14 @@ class HookManager {
 	}
 
 	public function make_callback( $callback, $variables ) {
-		return function() use( $callback, $variables ) {
+		return function( $anything = false ) use( $callback, $variables ) {
 			try {
 				$args = func_get_args();
 				return call_user_func_array( $callback, $args );
 			} catch (\Throwable $th) {
 				\av_admin_error_from_exception( $th );
 			}
+			return $anything;
 		};
 	}
 
