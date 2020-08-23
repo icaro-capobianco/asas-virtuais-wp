@@ -57,7 +57,7 @@ class AsasVirtuais {
 	private $acf_manager;
 	public function acf_manager() {
 		if ( ! isset( $this->acf_manager ) ) {
-			$this->acf_manager = new ACF\ACFManager();
+			$this->acf_manager = new ACF\ACFManager( $this );
 		}
 		return $this->acf_manager;
 	}
