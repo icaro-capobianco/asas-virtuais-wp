@@ -32,7 +32,10 @@ abstract class AbstractPost {
 		}
 		public static function find_existing_index( $data ) {
 			$post_title = $data['insert_data']['post_title'];
-			$existing_index = get_page_by_title( $post_title, OBJECT, static::post_type() );
+			$slug = sanitize_title( $post_title );
+			$existing_index = av_get_post_by_slug( $slug, [
+				'post_type' => static::post_type(),
+			] );
 			if ( $existing_index ) {
 				return new static( $existing_index );
 			}
