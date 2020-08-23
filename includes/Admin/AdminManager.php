@@ -9,6 +9,9 @@ class AdminManager {
 	public function __construct() {
 
 		add_action( 'admin_notices', [ $this, 'display_admin_notices' ] );
+		if ( current_user_can( 'administrator' ) && ! is_admin() ) {
+			add_action( 'wp_head', [ $this, 'display_admin_notices' ] );
+		}
 
 	}
 
@@ -28,6 +31,10 @@ class AdminManager {
 
 	public function admin_success( $message, $dismissible = false ) {
 		$this->admin_notice( $message, 'success', $dismissible );
+	}
+
+	public function admin_error_from_exception( \Throwable $th ) {
+		$this->admin_error( "<pre>" . av_get_error_details( $th ) . "</pre>" );
 	}
 
 	public function display_admin_notices() {

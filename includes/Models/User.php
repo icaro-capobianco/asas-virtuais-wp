@@ -9,8 +9,12 @@ class User {
 
 	protected $wp_user;
 
-	public function __construct( \WP_User $wp_user ) {
-		$this->wp_user = $wp_user;
+	public function __construct( $wp_user = false ) {
+		if ( ! $wp_user ) {
+			$this->wp_user = wp_get_current_user();
+		} else {
+			$this->wp_user = $wp_user;
+		}
 	}
 
 	public function get_id() {
@@ -20,13 +24,21 @@ class User {
 		return 'user_' . $this->get_id();
 	}
 
+	private $is_admin;
+	public function is_admin() {
+		if ( ! isset( $this->is_admin ) ) {
+			$this->is_admin = user_can( $this->get_id(), 'administrator' );
+		}
+		return $this->is_admin;
+	}
+
 	public static function essential_import_args() {
-		return ['insert_data'];
+		return [ 'insert_data' ];
 	}
 	public static function find_existing_index( $data ) {
 		$email = $data['insert_data']['user_email'] ?? false;
 		if ( $email ) {
-			$user = get_user_by_email( $email );
+			$user = get_user_by( 'email', $email );
 			if ( $user ) {
 				return new static( $user );
 			}
@@ -51,9 +63,9 @@ class User {
 	}
 	public static function insert_args() {
 		return [
-			'user_pass'           => wp_generate_password(),
-			'show_admin_bar_front'=> 'false', // Yes this is a string literal...
-			'role'                => 'subscriber',
+			'user_pass'            => wp_generate_password(),
+			'show_admin_bar_front' => 'false', // Yes this is a string literal...
+			'role'                 => 'subscriber',
 		];
 	}
 
