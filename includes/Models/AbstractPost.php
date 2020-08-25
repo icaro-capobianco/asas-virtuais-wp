@@ -20,12 +20,21 @@ abstract class AbstractPost {
 	}
 
 	// Implementing abstract methods from traits
+		/**
+		 * @param string $key
+		 * @param mixed $value
+		 * @return bool
+		 */
 		public function update_meta( $key, $value ) {
-			$meta = get_post_meta( $this->get_id(), $key, true );
-			if ( "$value" === "$meta" ) {
+			$result = update_post_meta( $this->get_id(), $key, $value );
+			if ( $result !== false ) {
 				return true;
 			}
-			return update_post_meta( $this->get_id(), $key, $value );
+			$meta = get_post_meta( $this->get_id(), $key, true );
+			if ( $value === $meta || json_encode( $value ) === json_encode( $meta ) ) {
+				return true;
+			}
+			return false;
 		}
 		public static function essential_import_args() {
 			return [ 'insert_data' => [ 'post_title' ] ];
@@ -111,6 +120,13 @@ abstract class AbstractPost {
 		public function get_menu_order() {
 			return $this->post_object->menu_order;
 		}
+		public function get_meta( $key, $fallback = null ) {
+			$result = get_post_meta( $this->get_id(), $key, true );
+			if ( $result === null && $fallback !== null ) {
+				return $fallback;
+			}
+			return $result;
+		}
 
 	// Abstract methods
 		abstract static function post_type();
@@ -150,5 +166,6 @@ abstract class AbstractPost {
 				return new static ( $post );
 			}, get_posts( array_replace( $defualts, $args ) ) );
 		}
+
 
 }

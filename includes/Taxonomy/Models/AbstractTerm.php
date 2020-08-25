@@ -38,24 +38,40 @@ abstract class AbstractTerm {
 
 
 	// Instance
+		/** @return self|false */
 		public static function instance_from_id( $id ) {
-			$taxonomy = static::get_taxonomy();
-			$wp_term  = get_term( $id, $taxonomy );
-			$wp_term  = static::validate_get_term_result( $wp_term, $id );
-			return new static( $wp_term );
+			return static::instance_by( 'term_id', $id );
 		}
+		/** @return self|false */
 		public static function instance_from_slug( string $slug ) {
-			$taxonomy = static::get_taxonomy();
-			$wp_term  = get_term_by( 'slug', $slug, $taxonomy );
-			$wp_term  = static::validate_get_term_result( $wp_term, $slug );
-			return new static( $wp_term );
+			return static::instance_by( 'slug', $slug );
 		}
-		protected static function validate_get_term_result( $result, $identifier ) {
+		/** @return self|false */
+		public static function instance_by( string $field, $value ) {
+			$result = get_term_by( $field, $value, static::get_taxonomy() );
 			if ( is_array( $result ) ) {
 				$result = $result[0];
 			}
 			if ( ! $result ) {
-				throw new \Exception( "Term $identifier of taxonomy $taxonomy not found" );
+				return false;
+			}
+			return new static ( $result );
+		}
+		/** @return array */
+		public static function query( $args ) {
+			return array_map( function( \WP_Term $term ) {
+				return new static( $term );
+			}, get_terms( wp_parse_args( $args, [
+				'taxonomy' => static::get_taxonomy()
+			] ) ) );
+		}
+		// Deprecated
+		protected static function validate_get_term_result( $result ) {
+			if ( is_array( $result ) ) {
+				$result = $result[0];
+			}
+			if ( ! $result ) {
+				return false;
 			}
 			return $result;
 		}

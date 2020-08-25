@@ -1,5 +1,9 @@
 <?php
 if ( ! function_exists( 'av_attachment_index' ) ) {
+	/** Finds index of attachment by filename
+	 * @param string $filename
+	 * @return \WP_Post|false
+	 */
 	function av_attachment_index( $filename ) {
 		global $wpdb;
 		$title   = sanitize_file_name( pathinfo( $filename, PATHINFO_FILENAME ) );
@@ -12,6 +16,11 @@ if ( ! function_exists( 'av_attachment_index' ) ) {
 	}
 }
 if ( ! function_exists( 'av_insert_attachment_from_url' ) ) {
+	/**	Downloads file from url and inserts attachment based on the path, returns attachment ID, checks for existing index
+	 * @param string $url
+	 * @param array $args
+	 * @return integer
+	 */
 	function av_insert_attachment_from_url( $url, $args = [] ) {
 
 		$existing_index = av_attachment_index( basename( $url ) );
