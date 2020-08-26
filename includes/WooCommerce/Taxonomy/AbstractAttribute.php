@@ -8,7 +8,7 @@ abstract class AbstractAttribute extends AbstractTerm {
 	abstract public static function attribute_name();
 
 	public static function get_taxonomy() {
-		return 'pa_' . static::attribute_name();
+		return 'pa_' . sanitize_title( static::attribute_name() );
 	}
 
 }

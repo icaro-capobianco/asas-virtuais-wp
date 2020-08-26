@@ -79,7 +79,8 @@ if ( ! defined( 'AV_ACF_FIELD_PREFIX' ) ) {
 			}
 			$key            = AV_ACF_KEY_PREFIX . $slug;
 			$name           = AV_ACF_FIELD_PREFIX . $slug;
-			$key_label_name = compact( 'key', 'label', 'name' );
+			$_name          = $name;
+			$key_label_name = compact( 'key', 'label', 'name', '_name' );
 			return array_replace( $other_defaults, array_merge( $key_label_name, $data ), $overwrite );
 		}
 	}
@@ -378,6 +379,24 @@ if ( ! defined( 'AV_ACF_FIELD_PREFIX' ) ) {
 			return av_acf_field( $label, $field_data, $overwrite );
 		}
 	}
+	if ( ! function_exists( 'av_acf_group_field' ) ) {
+		function av_acf_group_field( $label, $sub_fields, $overwrite = [] ) {
+			$field_data = [
+				'type' => 'group',
+				'instructions' => '',
+				'required' => 0,
+				'conditional_logic' => 0,
+				'wrapper' => array(
+					'width' => '',
+					'class' => '',
+					'id' => '',
+				),
+				'layout' => 'block',
+				'sub_fields' => $sub_fields
+			];
+			return av_acf_field( $label, $field_data, $overwrite );
+		}
+	}
 
 // Utility functions
 	/** Use to set the value of the 'wrapper' option */
@@ -475,6 +494,9 @@ if ( ! defined( 'AV_ACF_FIELD_PREFIX' ) ) {
 							break;
 						case 'select':
 							$r = av_acf_import_select_option( $name, $value, $object_id );
+							break;
+						case 'image':
+							$r = av_acf_import_image( $name, $value, $object_id );
 							break;
 						default:
 							$r = av_acf_import_field( $name, $value, $object_id );
@@ -611,6 +633,16 @@ if ( ! defined( 'AV_ACF_FIELD_PREFIX' ) ) {
 				}
 			}
 			return false;
+		}
+	}
+	if ( ! function_exists( 'av_acf_import_image' ) ) {
+		function av_acf_import_image( $name, $value, $object_id ) {
+			if ( is_numeric( $value ) ) {
+				return av_acf_import_field( $name, $value, $object_id );
+			} elseif ( is_string( $value ) ) {
+				$attachment_id = av_insert_attachment_from_url( $value );
+				return av_acf_import_field( $name, $attachment_id, $object_id );
+			}
 		}
 	}
 	if ( ! function_exists( 'av_acf_import_field' ) ) {

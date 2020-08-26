@@ -77,12 +77,12 @@ abstract class AbstractTerm {
 		}
 
 	// Import
-		protected static $essential_import_args = [ 'name', 'slug' ];
+		protected static $essential_import_args = [ 'name' ];
 		public static function import( array $data ) {
 			// Validate existance of necessary data
 			static::validate_import_data( $data );
 
-			$slug = $data['slug'];
+			$slug = sanitize_title( $data['name'] );
 
 			// Check for existing index
 			$existing_index = get_term_by( 'slug', $slug, static::get_taxonomy() );
@@ -129,12 +129,13 @@ abstract class AbstractTerm {
 			}
 
 			$name = $data['name'];
-			$slug = $data['slug'];
+			$slug = sanitize_title( $name );
+			$taxonomy = static::get_taxonomy();
 
 			// Insert object
 			$term_insert = wp_insert_term(
 				$name,
-				static::get_taxonomy(),
+				$taxonomy,
 				[
 					// 'alias_of'
 					'slug'        => $slug,
@@ -144,7 +145,7 @@ abstract class AbstractTerm {
 
 			// Validate inserted object
 			if ( is_wp_error( $term_insert ) ) {
-				throw new \Exception( "Failed to insert term $slug.\n" . av_wp_error_message( $term_insert ) );
+				throw new \Exception( "Failed to insert term $slug. For taxonomy $taxonomy.\n" . av_wp_error_message( $term_insert ) );
 			}
 
 			// Get the ID
