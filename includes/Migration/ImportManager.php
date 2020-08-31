@@ -15,20 +15,33 @@ class ImportManager {
 		$this->framework_instance = $framework_instance;
 
 		if ( $token ) {
-			$this->token = $token;
-
-			if ( ! isset( $framework_instance->rest_manager ) ) {
-				throw new \Exception('Must instantiate rest_manager before import_manager');
-			}
-
-			$framework_instance->rest_manager()->add_endpoint( 'import/(?P<object_type>[a-zA-Z-_]+)', [
-				'methods' => [ 'POST', 'OPTIONS' ],
-				'callback' => [ $this, 'route_callback' ],
-				'args' => [
-					'object_type'
-				]
-			] );
+			$this->set_token( $token );
+			$this->register_import_endpoint();
 		}
+
+	}
+
+	public function register_import_endpoint( $token = false ) {
+
+		if ( ! $token ) {
+			$token = $this->token;
+		}
+
+		if ( ! $token ) {
+			return;
+		}
+
+		if ( ! isset( $this->framework_instance->rest_manager ) ) {
+			throw new \Exception('Must instantiate rest_manager before import_manager');
+		}
+
+		$this->framework_instance->rest_manager()->add_endpoint( 'import/(?P<object_type>[a-zA-Z-_]+)', [
+			'methods' => [ 'POST', 'OPTIONS' ],
+			'callback' => [ $this, 'route_callback' ],
+			'args' => [
+				'object_type'
+			]
+		] );
 	}
 
 	private $plugins_with_tokens_list = [];

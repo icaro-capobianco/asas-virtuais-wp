@@ -79,8 +79,8 @@ if ( ! defined( 'AV_ACF_FIELD_PREFIX' ) ) {
 			}
 			$key            = AV_ACF_KEY_PREFIX . $slug;
 			$name           = AV_ACF_FIELD_PREFIX . $slug;
-			$_name          = $name;
-			$key_label_name = compact( 'key', 'label', 'name', '_name' );
+			// $_name          = $name;
+			$key_label_name = compact( 'key', 'label', 'name' );
 			return array_replace( $other_defaults, array_merge( $key_label_name, $data ), $overwrite );
 		}
 	}

@@ -48,7 +48,8 @@ abstract class AbstractTerm {
 		}
 		/** @return self|false */
 		public static function instance_by( string $field, $value ) {
-			$result = get_term_by( $field, $value, static::get_taxonomy() );
+			$taxonomy = static::get_taxonomy();
+			$result = get_term_by( $field, $value, $taxonomy );
 			if ( is_array( $result ) ) {
 				$result = $result[0];
 			}

@@ -23,6 +23,30 @@ class Product extends \AsasVirtuaisWP\Models\AbstractPost {
 		return 'product';
 	}
 
+	public function add_attributes( $attribute_name, $attribute_terms ) {
+		if ( is_string( $attribute_terms ) ) {
+			$attribute_terms = [ $attribute_terms ];
+		}
+		$taxonomy = "pa_" . sanitize_title( $attribute_name );
+		$result = wp_set_object_terms( $this->get_id(), $attribute_terms, $taxonomy, true );
+
+		$product_attributes = get_post_meta( $this->get_id(), '_product_attributes', true );
+		if ( ! $product_attributes ) {
+			$product_attributes = [];
+		}
+
+		foreach ( $attribute_terms as $term_name ) {
+			$product_attributes[$taxonomy] = [
+				'name'         => $taxonomy, 
+				'value'        => $term_name,
+				'is_visible'   => '1',
+				'is_taxonomy'  => '1'
+			];
+		}
+
+		update_post_meta( $this->get_id(),'_product_attributes', $product_attributes );
+	}
+
 	public function export_array() {
 		$array = parent::export_array();
 
