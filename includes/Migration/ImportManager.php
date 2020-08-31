@@ -130,7 +130,7 @@ class ImportManager {
 			if ( $class ) {
 				$imported_object = $class::import( $parsed );
 			} else {
-				throw new \Exception( "$type is not a valid object to import" );
+				throw new \Exception( "$object_type is not a valid object to import" );
 			}
 
 	
