@@ -7,7 +7,7 @@ if ( ! function_exists( 'av_attachment_index' ) ) {
 	function av_attachment_index( $filename ) {
 		global $wpdb;
 		$filename = sanitize_file_name ( $filename );
-		$query   = "SELECT ID FROM $wpdb->posts WHERE post_type = 'attachment' AND guid LIKE '/%$filename'";
+		$query   = "SELECT ID FROM $wpdb->posts WHERE post_type = 'attachment' AND guid LIKE '%/$filename'";
 		$results = $wpdb->get_results( $query );
 		if ( ! empty( $results ) ) {
 			return $results[0];
