@@ -1,3 +1,5 @@
+This framework gained a lot of functionalities as time went by and since most plugins don't need all that I am starting to take things appart. I am making a new framework called asas-virtuais-wp-core which will have just the basic stuff for WP plugins, I also plan to move the generic PHP functions to a library called asas-virtuais-php.
+
 # Asas Virtuais WP Framework
 
 ## Asas Virtuais means Virtual Wings.
