@@ -78,7 +78,7 @@ class UpdateManager {
 			$myUpdateChecker = \Puc_v4_Factory::buildUpdateChecker(
 				$meta_url,
 				$plugin_file,
-				$plugin_slug,
+				$plugin_slug
 			);
 		} else {
 			asas_virtuais()->admin_manager()->admin_warning( 'Plugin updater class not found for the plugin: ' . $plugin_slug );
