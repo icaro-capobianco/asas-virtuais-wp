@@ -38,9 +38,6 @@ class ImportManager {
 		$this->framework_instance->rest_manager()->add_endpoint( 'import/(?P<object_type>[a-zA-Z-_]+)', [
 			'methods' => [ 'POST', 'OPTIONS' ],
 			'callback' => [ $this, 'route_callback' ],
-			'args' => [
-				'object_type'
-			]
 		] );
 	}
 
