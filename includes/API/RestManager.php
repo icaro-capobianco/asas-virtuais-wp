@@ -14,6 +14,7 @@ class RestManager {
 
 	public function register_routes() {
 		foreach( $this->routes as $endpoint => $args ) {
+			$args['permission_callback'] = $args['permission_callback'] ?? '__return_true';
 			register_rest_route( $this->route_namespace, "/$endpoint", $args );
 		}
 	}
